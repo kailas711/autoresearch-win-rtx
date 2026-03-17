@@ -4,6 +4,7 @@ Inference module for AutoResearch SDPA model.
 Uses the EXACT model architecture from train.py for 100% compatibility with GPU checkpoints.
 """
 
+import sys
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -18,6 +19,21 @@ from typing import Optional, Tuple
 # ==========================================
 
 
+# Register GPTConfig in __main__ module namespace for pickle compatibility
+# Checkpoints saved from train.py pickle GPTConfig as __main__.GPTConfig
+# This allows pickle to find it when loading in inference.py
+class _PickleCompat:
+    """Compatibility class to resolve pickled GPTConfig from train.py"""
+    pass
+
+# Add GPTConfig placeholder to __main__ if it exists (for pickle resolution)
+if '__main__' in sys.modules:
+    main_module = sys.modules['__main__']
+    if not hasattr(main_module, 'GPTConfig'):
+        # Create a placeholder that will be replaced after GPTConfig is defined
+        pass
+
+
 @dataclass
 class GPTConfig:
     sequence_len: int = 2048
@@ -30,6 +46,21 @@ class GPTConfig:
     attention_backend: str = "sdpa"
     use_activation_checkpointing: bool = False
     compute_dtype: torch.dtype = torch.bfloat16
+
+
+# Register GPTConfig in __main__ for pickle compatibility with train.py checkpoints
+# When train.py saves a checkpoint, GPTConfig is pickled as __main__.GPTConfig
+# By adding it here, pickle can resolve the class when loading
+if '__main__' in sys.modules:
+    sys.modules['__main__'].GPTConfig = GPTConfig
+
+# Allowlist GPTConfig for safe loading with weights_only=True
+# This suppresses the warning about unpickling __main__.GPTConfig
+try:
+    torch.serialization.add_safe_globals([GPTConfig])
+except (AttributeError, TypeError):
+    # Older PyTorch versions may not have add_safe_globals
+    pass
 
 
 def norm(x):
@@ -370,7 +401,12 @@ def load_checkpoint(path, device: Optional[str] = None) -> Tuple[GPT, dict, dict
     if device is None:
         device = 'cpu'
 
-    checkpoint = torch.load(path, map_location=device, weights_only=False)
+    # Load checkpoint with weights_only=False to support pickled GPTConfig from train.py
+    # GPTConfig is registered in __main__ module for pickle resolution compatibility
+    try:
+        checkpoint = torch.load(path, map_location=device, weights_only=False)
+    except Exception as e:
+        raise RuntimeError(f"Failed to load checkpoint from {path}: {e}")
 
     config_dict = {}
     metrics_dict = {}
@@ -381,13 +417,20 @@ def load_checkpoint(path, device: Optional[str] = None) -> Tuple[GPT, dict, dict
             # Wrapped format
             state_dict = checkpoint['model_state_dict']
 
-            # Handle config
+            # Handle config - with weights_only=True, config may be loaded as raw dict
+            # even if it was saved as GPTConfig object
             if 'config' in checkpoint:
                 checkpoint_config = checkpoint['config']
-                if isinstance(checkpoint_config, GPTConfig):
-                    config_dict = checkpoint.config.__dict__
-                elif isinstance(checkpoint_config, dict):
-                    config_dict = checkpoint_config
+                try:
+                    if isinstance(checkpoint_config, dict):
+                        config_dict = checkpoint_config
+                    elif hasattr(checkpoint_config, '__dict__'):
+                        config_dict = checkpoint_config.__dict__
+                    else:
+                        config_dict = dict(checkpoint_config)
+                except Exception as e:
+                    print(f"Warning: Could not extract config ({e}), inferring from state dict")
+                    config_dict = _get_default_config_from_checkpoint(state_dict).__dict__
             else:
                 config_dict = _get_default_config_from_checkpoint(state_dict).__dict__
 

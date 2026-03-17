@@ -178,7 +178,7 @@ class HealthResponse(BaseModel):
     tokenizer_loaded: bool = Field(description="Whether tokenizer is loaded")
     device: str = Field(description="Device running inference (cpu/cuda)")
     checkpoint_path: Optional[str] = Field(default=None, description="Path to loaded checkpoint")
-    model_config: Optional[dict] = Field(default=None, description="Model configuration")
+    model_cfg: Optional[dict] = Field(default=None, description="Model configuration")
     model_metrics: Optional[dict] = Field(default=None, description="Training metrics if available")
     error: Optional[str] = Field(default=None, description="Error message if model failed to load")
 
@@ -422,6 +422,17 @@ async def health():
 
     Returns server, model, and tokenizer status including configuration and metrics.
     """
+    # Convert config_dict to JSON-serializable format (handle torch.dtype)
+    model_cfg_serializable = None
+    if model is not None and config_dict:
+        model_cfg_serializable = {}
+        for k, v in config_dict.items():
+            if k == "compute_dtype" and hasattr(v, "__str__"):
+                # Convert torch.dtype to string
+                model_cfg_serializable[k] = str(v).replace("torch.", "")
+            else:
+                model_cfg_serializable[k] = v
+
     return HealthResponse(
         status="ok",
         model_loaded=model is not None,
@@ -429,7 +440,7 @@ async def health():
         tokenizer_loaded=tokenizer_ready,
         device=device,
         checkpoint_path=checkpoint_path_used,
-        model_config=config_dict if model else None,
+        model_cfg=model_cfg_serializable,
         model_metrics=metrics_dict,
         error=model_error,
     )
@@ -515,6 +526,8 @@ async def generate_text(request: GenerateRequest):
 
     try:
         # Generate tokens
+        import traceback
+        print(f"Generating with idx shape: {idx.shape}, max_tokens: {request.max_tokens}")
         generated = generate(
             model=model,
             idx=idx,
@@ -526,8 +539,10 @@ async def generate_text(request: GenerateRequest):
         )
 
         generated_tokens = generated.tolist()[0]
+        print(f"Generated {len(generated_tokens)} tokens")
         # Decode to text
         generated_text = tokenizer.decode(generated_tokens)
+        print(f"Decoded text: {generated_text[:100]}...")
 
         return GenerateResponse(
             generated_text=generated_text,
@@ -538,6 +553,8 @@ async def generate_text(request: GenerateRequest):
         )
 
     except Exception as e:
+        error_trace = traceback.format_exc()
+        print(f"Generation error: {error_trace}")
         raise HTTPException(status_code=500, detail=f"Generation failed: {str(e)}")
 
 

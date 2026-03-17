@@ -35,14 +35,16 @@ COPY --chown=inference:inference prepare.py .
 COPY --chown=inference:inference inference.py .
 
 # Install ALL Python dependencies first (including torch for prepare.py)
+# numpy is required by PyTorch (torch imports numpy internally)
+# Split install: torch from PyTorch index, others from PyPI
 RUN uv pip install --system \
     torch==2.4.0+cpu --index-url https://download.pytorch.org/whl/cpu && \
     uv pip install --system \
+    numpy==1.26.4 \
     pyarrow==21.0.0 \
     requests==2.32.0 \
     rustbpe==0.1.0 \
-    tiktoken==0.11.0 \
-    --index-url https://pypi.org/simple/
+    tiktoken==0.11.0
 
 # Run prepare.py to download data and train tokenizer
 # This downloads TinyStories (~60MB) and trains a BPE tokenizer
@@ -54,7 +56,7 @@ RUN python prepare.py \
 COPY --chown=inference:inference api_server.py .
 
 # Install FastAPI dependencies
-RUN uv pip install --system fastapi uvicorn[standard] pydantic starlette
+RUN uv pip install --system fastapi uvicorn[standard] pydantic==2.10.6 starlette typing-extensions
 
 # Create checkpoints directory with correct ownership
 RUN mkdir -p /app/checkpoints && chown inference:inference /app/checkpoints
