@@ -64,6 +64,7 @@ class GpuProfile:
     default_checkpointing: bool
     eval_batch_cap: int = 16
     sequence_len_cap: int = MAX_SEQ_LEN
+    depth_override: int | None = None
 
 
 SUPPORTED_CONSUMER_CAPABILITIES = {
@@ -286,7 +287,8 @@ def _resolve_xpu_profile(gpu_name, gpu_vram_gb, is_windows):
                 checkpoint_modes=(True,),
                 default_checkpointing=True,
                 eval_batch_cap=1,
-                sequence_len_cap=1024,
+                sequence_len_cap=512,
+                depth_override=6,
             )
         return GpuProfile(
             name="intel-arc-16gb-plus",
@@ -1036,9 +1038,13 @@ EVAL_BATCH_SIZE = 8
 def _get_total_batch_size(runtime):
     if runtime.backend_name == "xpu":
         if runtime.gpu_vram_gb < 16.0:
-            return 2 ** 16
+            return 2 ** 14
         return 2 ** 17
     return TOTAL_BATCH_SIZE
+
+
+def _get_model_depth(runtime):
+    return runtime.gpu_profile.depth_override or DEPTH
 
 
 def build_model_config(depth, vocab_size, runtime, use_activation_checkpointing=None):
@@ -1485,7 +1491,7 @@ def main():
     chosen_checkpointing = None
     for train_batch_size, use_checkpointing in train_candidates:
         config = build_model_config(
-            DEPTH,
+            _get_model_depth(runtime),
             vocab_size,
             runtime,
             use_activation_checkpointing=use_checkpointing,
@@ -1592,7 +1598,7 @@ def main():
     print(f"total_tokens_M:   {total_tokens / 1e6:.1f}")
     print(f"num_steps:        {step}")
     print(f"num_params_M:     {num_params / 1e6:.1f}")
-    print(f"depth:            {DEPTH}")
+    print(f"depth:            {_get_model_depth(runtime)}")
     print(f"dataset:          {tokenizer.dataset}")
     print(f"train_batch_size: {chosen_train_batch}")
     print(f"eval_batch_size:  {chosen_eval_batch}")

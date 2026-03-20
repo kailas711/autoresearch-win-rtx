@@ -61,6 +61,13 @@ Quick validation run (recommended after setup):
 If the above commands all work ok, your setup is working and you can go into autonomous research mode.
 
 For this machine specifically, the detected target is `Intel(R) Arc(TM) B580 Graphics` on Windows 11 with driver `32.0.101.8531`.
+The currently validated stable Arc B580 profile for full 5-minute runs is:
+
+- train batch size: `2`
+- eval batch size: `1`
+- sequence length: `512`
+- model depth: `6`
+- total batch size target: `16384`
 
 As of March 20, 2026, `uv sync` does not resolve the PyTorch XPU wheel set cleanly on this machine, so the setup script installs the official XPU wheel directly into `.venv` and then installs the remaining Python dependencies separately.
 
@@ -100,6 +107,7 @@ This branch's Windows policy is explicit and tiered.
 - Desktop Intel Arc is the primary Windows target for this branch.
 - Floor policy for Intel Arc desktop GPUs is `>=10 GB` VRAM. The Arc B580 12GB is inside the intended support range.
 - Runtime adaptation is profile-driven: backend, BF16/TF32 support, OS, and VRAM tier determine candidate batch sizes and checkpointing strategy.
+- On the Arc B580 12GB, stable full-budget runs currently require a more conservative XPU profile than similarly sized CUDA cards.
 - Supported consumer profiles run a short eager-mode autotune pass and cache the selected candidate per GPU/runtime fingerprint.
 - Autotune env controls: `AUTORESEARCH_DISABLE_AUTOTUNE=1` skips probing; `AUTORESEARCH_AUTOTUNE_REFRESH=1` refreshes the cached decision.
 - This branch is being adapted against an Intel Arc B580 on Windows 11. Other Intel Arc SKUs are expected to follow the same `xpu` path but may need retuning.
