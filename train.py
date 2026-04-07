@@ -148,10 +148,10 @@ def _resolve_gpu_profile(gpu_name, capability, gpu_vram_gb, is_windows):
             )
         if arch == "blackwell" and gpu_vram_gb < 10.0:
             return GpuProfile(
-                name="blackwell-8-9gb",
+                name=f"{arch}-8-9gb",
                 is_supported_consumer=True,
                 is_compatibility_only=False,
-                train_batch_candidates=(8, 4, 2),
+                train_batch_candidates=(8, 4, 2, 1),
                 checkpoint_modes=(True,),
                 default_checkpointing=True,
                 eval_batch_cap=4,
