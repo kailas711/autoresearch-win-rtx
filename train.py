@@ -74,7 +74,7 @@ MIN_SUPPORTED_VRAM_GB_BY_ARCH = {
     "turing": 8.0,
     "ampere": 10.0,
     "ada": 10.0,
-    "blackwell": 10.0,
+    "blackwell": 8.0,
 }
 VRAM_FLOOR_TOLERANCE_GB = 0.05
 AUTOTUNE_WARMUP_STEPS = 2
@@ -100,6 +100,7 @@ def _get_gpu_peak_flops(gpu_name):
         ("5070 ti", 190.0e12),
         ("5070", 150.0e12),
         ("5060 ti", 120.0e12),
+        ("5060", 100.0e12),
         ("4060 ti", 88.4e12),
         ("2080 ti", 107.5e12),
         ("2080 super", 89.6e12),
@@ -138,6 +139,16 @@ def _resolve_gpu_profile(gpu_name, capability, gpu_vram_gb, is_windows):
         if arch == "turing" and gpu_vram_gb < 12.0:
             return GpuProfile(
                 name=f"{arch}-8-11gb",
+                is_supported_consumer=True,
+                is_compatibility_only=False,
+                train_batch_candidates=(8, 4, 2, 1),
+                checkpoint_modes=(True,),
+                default_checkpointing=True,
+                eval_batch_cap=4,
+            )
+        if arch == "blackwell" and gpu_vram_gb < 10.0:
+            return GpuProfile(
+                name=f"{arch}-8-9gb",
                 is_supported_consumer=True,
                 is_compatibility_only=False,
                 train_batch_candidates=(8, 4, 2, 1),
