@@ -32,7 +32,7 @@ Each experiment runs on a single GPU. The training script runs for a **fixed tim
 
 **The goal is simple: get the lowest val_bpb.** Since the time budget is fixed, you don't need to worry about training time — it's always 5 minutes. Everything is fair game: change the architecture, the optimizer, the hyperparameters, the batch size, the model size. The only constraint is that the code runs without crashing and finishes within the time budget.
 
-**VRAM** is a soft constraint. Some increase is acceptable for meaningful val_bpb gains, but it should not blow up dramatically.
+**VRAM**: see the hard ceiling in the Research priorities section (peak ≤ 10.5 GB). This rule supersedes any earlier "soft constraint" framing.
 
 **Simplicity criterion**: All else being equal, simpler is better. A small improvement that adds ugly complexity is not worth it. Conversely, removing something and getting equal or better results is a great outcome — that's a simplification win. When evaluating whether to keep a change, weigh the complexity cost against the improvement magnitude. A 0.001 val_bpb improvement that adds 20 lines of hacky code? Probably not worth it. A 0.001 val_bpb improvement from deleting code? Definitely keep. An improvement of ~0 but much simpler code? Keep.
 
@@ -47,7 +47,7 @@ The goal is **disciplined, interpretable progress on val_bpb**. Each branch shou
 - **One change per experiment.** Two changes at once make deltas un-attributable. Run them as separate experiments and stack the wins.
 - **Hypothesis before run.** Write the expected direction and rough magnitude in `learnings.md` *before* `uv run train.py`. If the result surprises you, that itself is a signal — record it.
 - **Simplicity tiebreaker.** Equal-or-better val_bpb with less code wins. Deletions that don't hurt are top-tier outcomes.
-- **Stop a line after 3 consecutive misses.** If three experiments in the same area (e.g., LR variants) don't improve val_bpb, switch areas. Don't keep grinding the same knob.
+- **Stop pursuing an area after 3 consecutive misses.** If three experiments in the same area (e.g., LR variants) don't improve val_bpb, switch areas. Don't keep grinding the same knob.
 - **Stack wins; don't blend.** Each commit kept on the branch is one validated improvement on top of the previous one. Never stack an unvalidated change on top of an unvalidated change.
 
 ### Leverage tiers — bias toward Tier 1 first
@@ -85,7 +85,7 @@ The goal is **disciplined, interpretable progress on val_bpb**. Each branch shou
 - Don't combine a Tier 1 and Tier 2 change in one experiment.
 - Don't introduce dropout or other stochastic regularization without first showing a baseline overfit; short runs rarely overfit.
 - Don't bring in optimizer libraries; tune `MuonAdamW` instead.
-- Don't change anything that lowers val_bpb in ways unrelated to actual modeling (eval-window edits, tokenizer changes, etc).
+- Don't artificially improve val_bpb through changes unrelated to actual modeling (eval-window edits, tokenizer changes, etc). Lower val_bpb is the goal, but only when the improvement reflects real modeling progress.
 
 ### `learnings.md` — entry per experiment
 
@@ -168,7 +168,7 @@ LOOP FOREVER:
 
 The idea is that you are a completely autonomous researcher trying things out. If they work, keep. If they don't, discard. And you're advancing the branch so that you can iterate. If you feel like you're getting stuck in some way, you can rewind but you should probably do this very very sparingly (if ever).
 
-**Timeout**: Each experiment should take ~5 minutes total (+ a few seconds for startup and eval overhead). If a run exceeds 10 minutes, kill it and treat it as a failure (discard and revert).
+**Timeout**: Each experiment should take ~5 minutes total (+ a few seconds for startup and eval overhead). If a run exceeds 7 minutes, kill it and treat it as a failure (discard and revert). This matches the hard ceiling in the Research priorities section.
 
 **Crashes**: If a run crashes (OOM, or a bug, or etc.), use your judgment: If it's something dumb and easy to fix (e.g. a typo, a missing import), fix it and re-run. If the idea itself is fundamentally broken, just skip it, log "crash" as the status in the tsv, and move on.
 
