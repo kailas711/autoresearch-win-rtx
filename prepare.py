@@ -211,7 +211,7 @@ def _download_tinystories_file(dataset_name):
         for chunk in response.iter_content(chunk_size=1024 * 1024):
             if chunk:
                 f.write(chunk)
-    os.rename(temp_path, filepath)
+    os.replace(temp_path, filepath)
     print(f"Data: downloaded {filename} to {filepath}")
 
 
