@@ -1122,11 +1122,14 @@ def _run_training_once(runtime, tokenizer, config, device_batch_size, smoke_test
     while True:
         torch.cuda.synchronize()
         t0 = time.time()
+        # Accumulate detached loss across micro-batches so logging and the
+        # explosion guard reflect the full effective batch, not just the last micro-step.
+        train_loss = torch.zeros((), device=runtime.device)
         for _ in range(grad_accum_steps):
             with autocast_ctx:
                 loss = model(x, y)
-            train_loss = loss.detach()
             loss = loss / grad_accum_steps
+            train_loss = train_loss + loss.detach()
             loss.backward()
             x, y, epoch = next(train_loader)
 
@@ -1187,6 +1190,8 @@ def _run_training_once(runtime, tokenizer, config, device_batch_size, smoke_test
             break
 
     print()
+    # Re-enable GC that was disabled at step 0 so the eval phase can collect cyclic garbage.
+    _restore_gc_after_attempt()
     return {
         "model": model,
         "num_params": num_params,
