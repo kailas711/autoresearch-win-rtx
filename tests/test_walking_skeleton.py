@@ -23,3 +23,17 @@ def test_score_translate_returns_scalar(tmp_path, monkeypatch):
     s = score_translate.score(model=None, tokenizer=None, gold_subset_only=True)
     assert isinstance(s, float)
     assert 0.0 <= s <= 1.0
+
+
+def test_train_translate_smoke(tmp_path, monkeypatch):
+    monkeypatch.setenv("WALKING_SKELETON_CACHE", str(tmp_path / "cache"))
+    import prepare_translate
+    prepare_translate.main()
+
+    import train_translate
+    result = train_translate.main(smoke_test=True)
+    assert result is not None
+    assert "final_loss" in result
+    assert "score" in result
+    assert result["final_loss"] >= 0.0
+    assert isinstance(result["score"], float)
