@@ -1,7 +1,9 @@
 # Hebrew/Greek Translation Bridge — JSON Export Design
 
-**Status:** Design draft — read-only pass, no code written yet.
-**Date:** 2026-04-25
+**Status:** Future-option reference. **Not** part of Phase 1.
+**Date:** 2026-04-25 (status revised 2026-04-26)
+
+> **Architectural note:** This document was originally written assuming `fellwork-api` would feed structured input to the autoresearch ML pipeline. That assumption has been revised — `fellwork-api` is downstream of this research, not upstream, and will be rebuilt later informed by Phase 1–5 outputs. The ML research uses public-domain structural sources directly (OSHB for morphology, Macula for phrase nodes). This bridge design is preserved as a reference for if/when a runtime integration becomes useful in a future phase. See `docs/superpowers/specs/2026-04-25-phase-1-design.md` for the active Phase 1 design.
 
 ---
 
