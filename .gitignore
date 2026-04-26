@@ -24,3 +24,6 @@ dev/
 *.log
 run.log
 checkpoint_pre_eval.pt
+
+# Walking-skeleton generated artifacts
+data/cache/

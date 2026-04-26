@@ -34,7 +34,7 @@ Hebrew (OSHB)  +  morphology (ETCBC)  +  phrase nodes (Macula)
                    (Phase 2 designs and tunes the model)
                               │
                               ▼
-              evaluate_translate.py — chrF + structural rubric checks
+              score_translate.py — chrF + structural rubric checks
                               │
                               ▼
                   single-scalar score for autoresearch loop
@@ -84,9 +84,13 @@ Initial Phase 2 baseline runs **without fine-tune**, just bulk-trained — estab
 1. ✅ `gold/catalog.json` — done
 2. ✅ `gold/rubric.md` — done
 3. **`prepare_translate.py`** — Python ingest replacing `prepare.py`'s TinyStories path. Pulls OSHB + Macula + Berean/WEB/YLT directly; joins to a unified per-verse record; trains the multilingual BPE tokenizer.
-4. **`evaluate_translate.py`** — chrF + structural metric returning a single scalar (lower-better). Uses gold catalog as reference.
+4. **`score_translate.py`** — chrF + structural metric returning a single scalar (lower-better). Uses gold catalog as reference.
 5. **`train_translate.py`** baseline — minimal seq2seq that runs in 5 min on a 4070 12 GB; produces *some* translation; sanity-checked against the eval harness.
 6. **Phase 1 smoke test** — end-to-end (prepare → train → eval → score) without crashes; reports a baseline metric number.
+
+> Note: the scoring module was renamed from `evaluate_translate.py` to
+> `score_translate.py` during Phase 1 build (2026-04-26). The walking-skeleton
+> plan documents the rationale.
 
 Estimated 2–3 weeks of evening/weekend work.
 
