@@ -20,7 +20,6 @@
 ## Open questions
 
 - **Phase 1 simplification PR #5** is open. Once merged, the Phase 1 spec drops fellwork-api integration. The first Phase 1 build session should work against the simplified spec.
-- **Lexicon licensing.** HALOT (Hebrew) and BDAG (Greek) are commercial. Confirm derivative-use rights before training. Fall back to BDB / KM / Thayer / LSJ only otherwise.
 - **Tokenizer scheme.** Multilingual BPE with structural special tokens (`<phrase>`, `<clause>`, `<construct>`, suffix tags) per Phase 1 spec; vocab ~16k. Sanity-check on first session.
 - **Model architecture.** Encoder-decoder vs prefix-LM. Phase 2 decision.
 - **Rubric metric weights.** α=0.5 in spec; revisit after first eval pass.

@@ -39,7 +39,7 @@ Tracks share orchestration scaffolding (this doc + roster + protocol) but iterat
 
 Each track names the lexicons whose entries are loaded by `prepare_translate.py` as part of the per-token feature set the model sees. Lexicons are loaded into a side-table keyed by lemma; the training data references the side-table by lookup.
 
-**Open licensing question:** HALOT and BDAG are commercial. The other four (KM, BDB, Thayer's, LSJ) have open or public-domain editions. The team must confirm derivative-use rights for the commercial titles before training begins. Until confirmed, fall back to BDB (Hebrew) and Thayer/LSJ (Greek) only.
+**Licensing:** The user has access rights to all six lexicons (HALOT, KM, BDB for Hebrew; Thayer, LSJ, BDAG for Greek), so the full lexicon set is in scope. *Note for downstream:* if the trained model or its outputs are eventually published, redistribution of derivative content involving HALOT/BDAG should be reviewed against those publishers' terms. Internal research use is unaffected.
 
 ### Success criteria (research-complete signal)
 
@@ -258,22 +258,22 @@ the first productive Builder session:
    linear; reserve this orchestration for Phase 2+. Use a simpler L-scope
    feature-dev session for Phase 1 build itself.
 
-2. **Lexicon licensing.** HALOT and BDAG are commercial. Confirm
-   derivative-use rights or fall back to BDB / Thayer / LSJ only.
-
-3. **Greek gold corpus.** No Greek teaching materials extracted yet. Greek
+2. **Greek gold corpus.** No Greek teaching materials extracted yet. Greek
    track is gated until either (a) Greek-equivalent PDFs are added to
    `gold/` and extracted, or (b) the user provides Greek gold translations
    directly.
 
-4. **Rust export mechanism.** Candle vs Burn vs ONNX vs distilled-rules. To
+3. **Rust export mechanism.** Candle vs Burn vs ONNX vs distilled-rules. To
    be decided in Phase 5 once a model exists; recorded here as an open
    question so it does not get forgotten.
 
-5. **Verifier vs evaluate_translate.py overlap.** The Verifier role and
+4. **Verifier vs evaluate_translate.py overlap.** The Verifier role and
    `evaluate_translate.py` both score experiments. Once `evaluate_translate.py`
    exists, the Verifier's job collapses to "run the script and confirm
    results.tsv row matches script output." Worth simplifying then.
+
+**Resolved:** Lexicon access for HALOT, KM, BDB, Thayer, LSJ, and BDAG is
+confirmed (2026-04-26). All six are in scope.
 
 ---
 

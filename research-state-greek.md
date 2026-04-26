@@ -26,7 +26,7 @@ The Greek track is gated until *all* of the following are in place:
   - (b) The user provides Greek gold translations directly (image, doc, or text).
 - [ ] **Greek source text.** SBLGNT (or another Koine NT edition) selected and ingested.
 - [ ] **Greek morphology + phrase data.** Macula Greek / OpenGNT alignments fetched.
-- [ ] **Greek lexicon access.** Confirmed derivative-use rights for BDAG (commercial). Public-domain fallback: Thayer + LSJ only.
+- [x] **Greek lexicon access.** Confirmed (2026-04-26): user has access to BDAG, Thayer, and LSJ.
 - [ ] **Hebrew track validation.** The Hebrew track has at least produced a working baseline + first autoresearch loop iteration. This validates the methodology before duplicating infrastructure for Greek.
 
 ## Open questions
