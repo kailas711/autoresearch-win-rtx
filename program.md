@@ -13,7 +13,7 @@ To set up a new experiment, work with the user to:
    - `prepare.py` — fixed constants, data prep, tokenizer, dataloader, evaluation. Do not modify.
    - `train.py` — the file you modify. Model architecture, optimizer, training loop.
 4. **Verify data exists**: Check that `~/.cache/autoresearch/` contains data shards and a tokenizer. If not, tell the human to run `uv run prepare.py`.
-5. **Initialize results.tsv**: Create `results.tsv` with just the header row. The baseline will be recorded after the first run.
+5. **Initialize results.tsv and learnings.md**: Create `results.tsv` with just the header row, and create `learnings.md` containing only `# Learnings` as its first line. Both files are appended to as experiments run.
 6. **Confirm and go**: Confirm setup looks good.
 
 Once you get confirmation, kick off the experimentation.
@@ -32,11 +32,74 @@ Each experiment runs on a single GPU. The training script runs for a **fixed tim
 
 **The goal is simple: get the lowest val_bpb.** Since the time budget is fixed, you don't need to worry about training time — it's always 5 minutes. Everything is fair game: change the architecture, the optimizer, the hyperparameters, the batch size, the model size. The only constraint is that the code runs without crashing and finishes within the time budget.
 
-**VRAM** is a soft constraint. Some increase is acceptable for meaningful val_bpb gains, but it should not blow up dramatically.
+**VRAM**: see the hard ceiling in the Research priorities section (peak ≤ 10.5 GB). This rule supersedes any earlier "soft constraint" framing.
 
 **Simplicity criterion**: All else being equal, simpler is better. A small improvement that adds ugly complexity is not worth it. Conversely, removing something and getting equal or better results is a great outcome — that's a simplification win. When evaluating whether to keep a change, weigh the complexity cost against the improvement magnitude. A 0.001 val_bpb improvement that adds 20 lines of hacky code? Probably not worth it. A 0.001 val_bpb improvement from deleting code? Definitely keep. An improvement of ~0 but much simpler code? Keep.
 
 **The first run**: Your very first run should always be to establish the baseline, so you will run the training script as is.
+
+## Research priorities
+
+The goal is **disciplined, interpretable progress on val_bpb**. Each branch should be a readable trail of validated wins, not a stack of un-attributable changes.
+
+### Process discipline
+
+- **One change per experiment.** Two changes at once make deltas un-attributable. Run them as separate experiments and stack the wins.
+- **Hypothesis before run.** Write the expected direction and rough magnitude in `learnings.md` *before* `uv run train.py`. If the result surprises you, that itself is a signal — record it.
+- **Simplicity tiebreaker.** Equal-or-better val_bpb with less code wins. Deletions that don't hurt are top-tier outcomes.
+- **Stop pursuing an area after 3 consecutive misses.** If three experiments in the same area (e.g., LR variants) don't improve val_bpb, switch areas. Don't keep grinding the same knob.
+- **Stack wins; don't blend.** Each commit kept on the branch is one validated improvement on top of the previous one. Never stack an unvalidated change on top of an unvalidated change.
+
+### Leverage tiers — bias toward Tier 1 first
+
+**Tier 1 — low-risk, high-leverage.**
+
+- LR schedule: `WARMUP_RATIO`, `WARMDOWN_RATIO`, `FINAL_LR_FRAC`
+- Optimizer hyperparameters: `MATRIX_LR`, `EMBEDDING_LR`, `UNEMBEDDING_LR`, `SCALAR_LR`, `WEIGHT_DECAY`, `ADAM_BETAS`
+- Muon momentum schedule (`get_muon_momentum`, currently 0.85 → 0.95 over 300 steps)
+- Init scales (the `s = 3 ** 0.5 * n_embd ** -0.5` in `init_weights`, the `lm_head` init std = 0.001)
+- `TOTAL_BATCH_SIZE` (note: changing this changes `grad_accum_steps`)
+
+**Tier 2 — higher-risk, requires written motivation.**
+
+- `DEPTH` and `ASPECT_RATIO` (depth × width)
+- Attention: `n_kv_head` (GQA), `WINDOW_PATTERN`, `HEAD_DIM`
+- MLP: activation function (currently ReLU²), expansion ratio (currently 4×)
+- Logits softcap (currently 15)
+- Value embeddings, residual lambdas (`resid_lambdas`, `x0_lambdas`)
+- Normalization variant (currently RMSNorm)
+
+**Rule:** Start every fresh branch in Tier 1. When one Tier 1 area stalls (3 misses), switch to a *different* Tier 1 area before moving up. Move to Tier 2 only after at least two Tier 1 areas have stalled in the same branch, *or* you have a written hypothesis in `learnings.md` that specifically requires a Tier 2 change.
+
+### Hard constraints (do not break)
+
+- **Peak VRAM ≤ 10.5 GB.** Watch `peak_vram_mb` in `run.log`; anything above this rolls back the experiment regardless of val_bpb.
+- **No new dependencies.** Anything outside `pyproject.toml` is off-limits.
+- **Don't touch `prepare.py`.** Constants, dataloader, and `evaluate_bpb` are fixed.
+- **Each run completes in ≤ 7 minutes wall-clock.** 5-min training budget + setup/eval. Anything longer = kill and discard.
+- **Eager-only runtime.** Don't re-enable `torch.compile`; this fork's runtime path is intentional.
+
+### Anti-patterns
+
+- Don't disable activation checkpointing on profiles where autotune chose it on — you will OOM mid-run.
+- Don't combine a Tier 1 and Tier 2 change in one experiment.
+- Don't introduce dropout or other stochastic regularization without first showing a baseline overfit; short runs rarely overfit.
+- Don't bring in optimizer libraries; tune `MuonAdamW` instead.
+- Don't artificially improve val_bpb through changes unrelated to actual modeling (eval-window edits, tokenizer changes, etc). Lower val_bpb is the goal, but only when the improvement reflects real modeling progress.
+
+### `learnings.md` — entry per experiment
+
+Append one entry per experiment, in the same order as `results.tsv`:
+
+```markdown
+## <short-commit> — <one-line title>
+- Hypothesis: <what we expected and why; cite tier and area>
+- Change: <specific lines/symbols modified, e.g. "MATRIX_LR 0.04 → 0.06">
+- Observation: <val_bpb delta vs prior best, peak_vram_mb, anything notable in run.log>
+- Conclusion: <kept | discarded | crash; why; what to try next>
+```
+
+The hypothesis goes in *before* the run; the observation and conclusion go in after. If the experiment crashes, record what was attempted and the failure mode under Observation, then move on.
 
 ## Output format
 
@@ -105,7 +168,7 @@ LOOP FOREVER:
 
 The idea is that you are a completely autonomous researcher trying things out. If they work, keep. If they don't, discard. And you're advancing the branch so that you can iterate. If you feel like you're getting stuck in some way, you can rewind but you should probably do this very very sparingly (if ever).
 
-**Timeout**: Each experiment should take ~5 minutes total (+ a few seconds for startup and eval overhead). If a run exceeds 10 minutes, kill it and treat it as a failure (discard and revert).
+**Timeout**: Each experiment should take ~5 minutes total (+ a few seconds for startup and eval overhead). If a run exceeds 7 minutes, kill it and treat it as a failure (discard and revert). This matches the hard ceiling in the Research priorities section.
 
 **Crashes**: If a run crashes (OOM, or a bug, or etc.), use your judgment: If it's something dumb and easy to fix (e.g. a typo, a missing import), fix it and re-run. If the idea itself is fundamentally broken, just skip it, log "crash" as the status in the tsv, and move on.
 
