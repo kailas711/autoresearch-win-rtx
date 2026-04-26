@@ -60,6 +60,32 @@ uv run train.py --smoke-test
 
 If the above commands all work ok, your setup is working and you can go into autonomous research mode.
 
+## Walking skeleton (Hebrew→English translation pipeline)
+
+Phase 1's minimal end-to-end translation pipeline. Validates that data ingest,
+tokenization, training, and scoring all wire together on this hardware.
+
+```bash
+# 1. Prepare tokenized binaries from Gen 1-3 fixtures
+uv run python prepare_translate.py
+
+# 2. Smoke-train (30 s) and report chrF
+uv run python train_translate.py --smoke-test
+
+# 3. Full skeleton (120 s)
+uv run python train_translate.py
+```
+
+Outputs:
+
+- `data/cache/walking_skeleton/tokenizer.pkl`
+- `data/cache/walking_skeleton/{train,val}.bin`
+- Console: `final loss`, `final score (1 - chrF, lower-better)`
+
+This is a learning skeleton, not a production translator. Subsequent plans
+extend the corpus to full OSHB, add multi-reference English, ingest the
+six lexicons, and add structural rubric metrics.
+
 ## Running the agent
 
 Simply spin up your Claude/Codex or whatever you want in this repo (and disable all permissions), then you can prompt something like:
