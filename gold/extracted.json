@@ -1,0 +1,433 @@
+{
+  "metadata": {
+    "extraction_date": "2026-04-25",
+    "source_pdf_count": 25,
+    "total_verse_entries": 53
+  },
+  "entries": [
+    {
+      "ref_start": "Gen.1.1",
+      "ref_end": "Gen.1.1",
+      "translation": "In the beginning",
+      "source_pdf": "Week 2b. Creation Account_What it is.pdf",
+      "confidence": "high",
+      "match_notes": "Cited explicitly in lecture as 'Genesis 1: In the beginning' in connection with John 1:1-5"
+    },
+    {
+      "ref_start": "Gen.1.3",
+      "ref_end": "Gen.1.5",
+      "translation": "And God said: 'Let there be light.' And there was light. And God saw the light, that it was good. And God separated the light from the darkness. And God called the light 'Day,' but the darkness he called 'Night.' And there was evening, and there was morning — one day.",
+      "source_pdf": "Week 3b. Day 1_Light.pdf",
+      "confidence": "high",
+      "match_notes": "Full Day 1 block rendered in distinctive 'one day' (cardinal) form; explicit Day 1 heading on slide"
+    },
+    {
+      "ref_start": "Gen.1.6",
+      "ref_end": "Gen.1.8",
+      "translation": "And God said: 'Let there be an expanse in the midst of the waters, separating between waters and waters.' And God made the expanse, and it separated between the waters which were underneath the expanse and between the waters which were above the expanse. And it was so. And God called the expanse 'Heavens.' And there was evening, and there was morning--a second day.",
+      "source_pdf": "Week 4a. Day 2.pdf",
+      "confidence": "high",
+      "match_notes": "Verbatim block under DAY 2 heading; distinctive 'separating between waters and waters' phrasing"
+    },
+    {
+      "ref_start": "Gen.1.9",
+      "ref_end": "Gen.1.10",
+      "translation": "And God said: 'Let the waters under the heavens be gathered to one place, and let ‘the dry’ appear.' And it was so. And God called the dry 'Earth,' but the waters he called 'Seas.' And God saw that it was good.",
+      "source_pdf": "Week 4b. Day 3.pdf",
+      "confidence": "high",
+      "match_notes": "Creation Act #1 block under Day 3; distinctive 'let the dry appear' phrasing"
+    },
+    {
+      "ref_start": "Gen.1.11",
+      "ref_end": "Gen.1.12",
+      "translation": "And God said: 'Let the earth cause sprouts to sprout: plants seeding seeds, fruit trees making fruit according to its kind whose seed is in it, upon the earth.' And it was so. And the earth brought forth sprouts: plants seeding seeds according to its kind, and trees making fruit, whose seed is in it, according to its kind.",
+      "source_pdf": "Week 4b. Day 3.pdf",
+      "confidence": "high",
+      "match_notes": "Creation Act #2 block repeated multiple times under Day 3; distinctive 'cause sprouts to sprout' phrasing"
+    },
+    {
+      "ref_start": "Gen.1.14",
+      "ref_end": "Gen.1.15",
+      "translation": "And God said, 'Let there be lights in the expanse of the heavens, to separate between the day and the night; and let them be for signs, and for appointed times, and for days and years; and let them be for lights in the expanse of the heavens, to give light on the earth.' And it was so.",
+      "source_pdf": "Week 5a. Day 4.pdf",
+      "confidence": "high",
+      "match_notes": "God's Speech block repeated 5 times under Day 4 heading; distinctive 'appointed times' phrasing"
+    },
+    {
+      "ref_start": "Gen.1.16",
+      "ref_end": "Gen.1.19",
+      "translation": "And God made two great lights . . . the great light to be ruler of the day, and the small light to be ruler of the night, . . . and the stars. And God gave them in the expanse of the heavens, to give light on the earth, and to rule during the day and during the night, and to separate between the light and the darkness. And God saw that it was good. And there was evening, and there was morning--a fourth day.",
+      "source_pdf": "Week 5a. Day 4.pdf",
+      "confidence": "high",
+      "match_notes": "Narrator Comments block under Day 4; distinctive 'ruler of the day/night' and 'a fourth day' phrasing"
+    },
+    {
+      "ref_start": "Gen.1.20",
+      "ref_end": "Gen.1.20",
+      "translation": "And God said, 'Let the waters swarm with swarming things, living creatures but flying things, let them fly over the earth upon the face of the expanse of the heavens.'",
+      "source_pdf": "Week 5b. Day 5.pdf",
+      "confidence": "high",
+      "match_notes": "God's First Speech block under Day 5 heading; distinctive 'let the waters swarm' phrasing; repeated multiple times"
+    },
+    {
+      "ref_start": "Gen.1.21",
+      "ref_end": "Gen.1.21",
+      "translation": "And God created the great tannanim, and all the living creatures the creeping things which swarm the waters according to their kind, and all the flying things with wings, according to their kind, And God saw that it was good.",
+      "source_pdf": "Week 5b. Day 5.pdf",
+      "confidence": "high",
+      "match_notes": "Narrative Comments block under Day 5; retains Hebrew 'tannanim' (sea monsters/serpents) untranslated"
+    },
+    {
+      "ref_start": "Gen.1.22",
+      "ref_end": "Gen.1.23",
+      "translation": "And God blessed them, saying . . . 'Be fruitful, and multiply, and fill the waters of the seas, but the flying things, let them multiply on the earth.' And there was evening, and there was morning--a fifth day.",
+      "source_pdf": "Week 5b. Day 5.pdf",
+      "confidence": "high",
+      "match_notes": "God's Second Speech / God's Blessing block under Day 5"
+    },
+    {
+      "ref_start": "Gen.1.24",
+      "ref_end": "Gen.1.25",
+      "translation": "And God said, 'Let the earth bring forth living souls according to their kind, animals, and crawling things, and living things of the earth according to their kind' and it was so. And God made the living things of the earth, according to their kind, and the animals according to their kind, and all the crawling things of the ground, according to their kind, And God saw that it was good.",
+      "source_pdf": "Week 6a. Day 6.pdf",
+      "confidence": "high",
+      "match_notes": "Creation Act #1 block under Day 6; distinctive 'living souls' and 'crawling things' phrasing"
+    },
+    {
+      "ref_start": "Gen.1.26",
+      "ref_end": "Gen.1.27",
+      "translation": "And God said, 'Let us make man as our image, according to our likeness, in order that they might rule over the fish of the sea, and over the birds of the heavens, and over the beasts, and over all the earth, and over all the creeping things, the creeping on the earth' And God created the man as his image, As the image of God he created him, Male and female he created them.",
+      "source_pdf": "Week 6a. Day 6.pdf",
+      "confidence": "high",
+      "match_notes": "Creation Act #2 block under Day 6; distinctive 'as our image' (not 'in our image') phrasing; repeated"
+    },
+    {
+      "ref_start": "Gen.1.28",
+      "ref_end": "Gen.1.28",
+      "translation": "And God blessed them. And he said to them, 'Be fruitful, multiply, and fill the earth, and subdue it, and rule over the fish of the sea and over the birds of the heavens, and over every living thing, those creeping upon the earth.'",
+      "source_pdf": "Week 6a. Day 6.pdf",
+      "confidence": "high",
+      "match_notes": "God's Blessing block under Day 6; repeated multiple times"
+    },
+    {
+      "ref_start": "Gen.1.29",
+      "ref_end": "Gen.1.30",
+      "translation": "And God said, 'Behold, I have given to you all the herbage seeding seeds, which are on the face of all the earth, and all the trees, which in them are the fruit of trees, seeding seed. To you they will be for food. But to all the living things of the earth, and to all the birds of the heavens, and to all the creeping things upon the earth, which are in them living souls, [I have given] all the green herbs for food.' And it was so.",
+      "source_pdf": "Week 6a. Day 6.pdf",
+      "confidence": "high",
+      "match_notes": "Food speech block under Day 6; distinctive 'herbage seeding seeds' and bracketed '[I have given]' phrasing; repeated twice"
+    },
+    {
+      "ref_start": "Gen.1.31",
+      "ref_end": "Gen.1.31",
+      "translation": "And God saw all which he had done, and behold, it was very good. And there was evening and there was morning--a day, the sixth.",
+      "source_pdf": "Week 6a. Day 6.pdf",
+      "confidence": "high",
+      "match_notes": "Concluding Statement block under Day 6; distinctive 'a day, the sixth' phrasing (article usage discussed); repeated three times"
+    },
+    {
+      "ref_start": "Gen.2.4",
+      "ref_end": "Gen.2.7",
+      "translation": "In the day the Lord God made the earth and the heavens, and all the shrubs of the field, before they were in the earth, and all the cultivated grains of the field, before they sprouted, (for the Lord God had not yet caused it to rain upon the earth, and there was no man to serve the ground, but ground water went up from the earth and watered all the face of the earth) the Lord God formed the man, dust from the ground. And he breathed into his nostrils breath of life. And the man became a living being.",
+      "source_pdf": "Week 7b. Paradise.pdf",
+      "confidence": "high",
+      "match_notes": "Introduction block under Gen 2 setup; repeated 4 times; distinctive 'cultivated grains of the field' and 'dust from the ground' phrasing"
+    },
+    {
+      "ref_start": "Gen.2.8",
+      "ref_end": "Gen.2.14",
+      "translation": "The Lord God caused to sprout from the ground all trees, pleasant to sight and good for food, and the tree of life in the middle of the garden, and the tree of the knowledge of good and bad. Now a river goes out of Eden to water the garden. And from there it separates and becomes four heads. The name of the one, Pishon — It surrounds all the land of Havilah, where there is gold. (Now the gold of that land is good. Pearls and lapis lazuli are there.) And the name of the second, Gihon. It surrounds the land of Cush. And the name of the third, Tigris. It goes on the east of Assyria. And the name of the fourth, it is Euphrates.",
+      "source_pdf": "Week 7b. Paradise.pdf",
+      "confidence": "high",
+      "match_notes": "Garden description block; distinctive 'tree of the knowledge of good and bad' and 'lapis lazuli' phrasing"
+    },
+    {
+      "ref_start": "Gen.2.15",
+      "ref_end": "Gen.2.15",
+      "translation": "And the Lord God took the man. And he caused him to rest in the garden of Eden to serve it and to keep it.",
+      "source_pdf": "Week 7b. Paradise.pdf",
+      "confidence": "high",
+      "match_notes": "Placement of the Man block; repeated 3 times; distinctive 'caused him to rest' phrasing"
+    },
+    {
+      "ref_start": "Gen.2.16",
+      "ref_end": "Gen.2.17",
+      "translation": "And the Lord God commanded the man, saying: 'From every tree of the garden you may freely eat. But from the tree of the knowledge of good and bad, you may not eat from it. For, in the day that you eat from it, you will surely die.'",
+      "source_pdf": "Week 7b. Paradise.pdf",
+      "confidence": "high",
+      "match_notes": "Important Warning block; distinctive 'tree of the knowledge of good and bad' and 'you will surely die' phrasing"
+    },
+    {
+      "ref_start": "Gen.2.18",
+      "ref_end": "Gen.2.20",
+      "translation": "And the Lord God said: 'It is not good for the man to be alone. I will make him a helper that is suitable for him.' And the Lord God formed from the ground every living animal of the field, and every bird of the heavens. And he brought them to the man to see what he would call them. (Now whatever the man called each living creature, that was its name.) And the man called names to all cattle, and to the birds of the heavens, and to all the animals of the field. But, for the man, a helper suitable for him was not found.",
+      "source_pdf": "Week 7b. Paradise.pdf",
+      "confidence": "high",
+      "match_notes": "Unexpected Complication block; repeated twice; distinctive 'helper that is suitable for him' phrasing"
+    },
+    {
+      "ref_start": "Gen.2.21",
+      "ref_end": "Gen.2.23",
+      "translation": "And the Lord God caused a deep sleep to fall on the man. And he slept. And he took one of his ribs. And he closed up the flesh in its place. And the Lord God built the rib which he took from the man into a woman. And he brought her to the man. And the man said: 'This time it is bone of my bone, and flesh of my flesh. Because of this she will be called ishah because from ish this one was taken.'",
+      "source_pdf": "Week 7b. Paradise.pdf",
+      "confidence": "high",
+      "match_notes": "Rib/woman creation block repeated 4 times; retains Hebrew 'ishah/ish'; distinctive 'built the rib' phrasing"
+    },
+    {
+      "ref_start": "Gen.2.24",
+      "ref_end": "Gen.2.25",
+      "translation": "Therefore, a man will forsake his father and his mother and cling to his wife. And they will be one flesh. And the two of them, the man and his wife, were naked, and they were not ashamed.",
+      "source_pdf": "Week 7b. Paradise.pdf",
+      "confidence": "high",
+      "match_notes": "Narrator's Comments block; repeated 3 times; distinctive 'forsake' and 'cling' phrasing"
+    },
+    {
+      "ref_start": "Gen.3.1",
+      "ref_end": "Gen.3.1",
+      "translation": "Now the serpent was more clever than all the animals of the field, which the Lord God had made. And he said to the woman . . .",
+      "source_pdf": "Week 8ab Trouble in Paradise.pdf",
+      "confidence": "high",
+      "match_notes": "Opening of Gen 3; distinctive 'more clever' phrasing; repeated 3 times"
+    },
+    {
+      "ref_start": "Gen.3.1",
+      "ref_end": "Gen.3.5",
+      "translation": "And he said to the woman: 'Did God really say, ‘You all may not eat from every tree of the garden’?' And the woman said to the serpent: 'From the fruit of the trees of the garden we may eat. But, from the fruit of the tree that is in the middle of the garden God said, ‘You all may not eat from it and you all may not touch it, lest you all die’' And the serpent said to the woman: 'You all will not surely die. For God knows that, in the day that you all eat from it, your eyes will be open, and you all will be like God, knowing good and bad.'",
+      "source_pdf": "Week 8ab Trouble in Paradise.pdf",
+      "confidence": "high",
+      "match_notes": "Serpent-Woman dialogue block; repeated multiple times; distinctive 'You all' plural phrasing throughout and 'you all may not touch it'"
+    },
+    {
+      "ref_start": "Gen.3.6",
+      "ref_end": "Gen.3.6",
+      "translation": "And the woman saw that the tree was good to eat, and that it was pleasant to the eyes and the tree was desired to make wise And she took its fruit. And she ate. And she gave to the man with her. And he ate.",
+      "source_pdf": "Week 8ab Trouble in Paradise.pdf",
+      "confidence": "high",
+      "match_notes": "Fall action block; repeated twice; distinctive 'desired to make wise' phrasing"
+    },
+    {
+      "ref_start": "Gen.3.7",
+      "ref_end": "Gen.3.8",
+      "translation": "And their eyes were opened. And they knew that they were naked. And they sewed together fig leaves. And they made loincloths for themselves. And they heard the voice of the Lord God walking in the garden in the cool of the day. And he hid, the man and his wife, from the presence of the Lord God in the midst of the trees of the garden.",
+      "source_pdf": "Week 8ab Trouble in Paradise.pdf",
+      "confidence": "high",
+      "match_notes": "Post-fall result block; distinctive 'loincloths' and inverted word-order 'he hid, the man and his wife' preserving Hebrew emphasis"
+    },
+    {
+      "ref_start": "Gen.3.9",
+      "ref_end": "Gen.3.13",
+      "translation": "And the Lord God called to the man. And he said to him: 'Where are you?' And he said: 'Your voice I heard in the garden, and I saw that I was naked, and I hid.' And he said: 'Who told you that you are naked? The tree that I commanded you to not eat of it, did you eat from it?' And the man said: 'The woman that you gave to be with me, she, she gave to me from the tree. And I ate.' And the Lord God said to the woman: 'What is this you did?' And the woman said: 'The serpent deceived me. And I ate.'",
+      "source_pdf": "Week 9ab. Judgment.pdf",
+      "confidence": "high",
+      "match_notes": "Judgment dialogue block; distinctive doubled 'she, she gave' emphasizing Hebrew pronoun; Hebrew word-order preserved in 'Your voice I heard'"
+    },
+    {
+      "ref_start": "Gen.3.14",
+      "ref_end": "Gen.3.15",
+      "translation": "And the Lord God said to the serpent: 'Because you have done this, cursed are you above all cattle and above all the beasts of the field. Upon your belly you will go, and dirt you will eat all the days of your life. And enmity I will set between you and between the woman, and between your seed and between her seed. He will bruise your head, but you, you will bruise his heel.'",
+      "source_pdf": "Week 9ab. Judgment.pdf",
+      "confidence": "high",
+      "match_notes": "Serpent judgment block; repeated twice; distinctive 'dirt you will eat' and doubled 'you, you will bruise' phrasing"
+    },
+    {
+      "ref_start": "Gen.3.16",
+      "ref_end": "Gen.3.16",
+      "translation": "To the woman he said: 'I will greatly increase your toilsome labor and pregnancy. In hard labor you will bear sons, And to your husband your desire. But as for him, he will rule over you.'",
+      "source_pdf": "Week 9ab. Judgment.pdf",
+      "confidence": "high",
+      "match_notes": "Woman's judgment block; repeated 4 times; distinctive 'toilsome labor and pregnancy' combined and 'But as for him' phrasing"
+    },
+    {
+      "ref_start": "Gen.3.17",
+      "ref_end": "Gen.3.19",
+      "translation": "But to the man he said: 'Because . . . you have paid attention to the voice of your wife, and you ate from the tree that I commanded you saying, You will not eat from it,' cursed is the ground because of you. In toilsome labor you will eat from it all the days of your life. And thorns and thistles it will produce for you. And you will eat the herbs of the field. In the sweat of your face you will eat bread until your return to the ground, for from it you were taken. From dirt you are, and to dirt you will return.'",
+      "source_pdf": "Week 9ab. Judgment.pdf",
+      "confidence": "high",
+      "match_notes": "Man's judgment block; repeated twice; distinctive 'paid attention to the voice of your wife' and 'herbs of the field' phrasing"
+    },
+    {
+      "ref_start": "Gen.3.20",
+      "ref_end": "Gen.3.20",
+      "translation": "And the man called the name of his wife Havah, because she, she was the mother of all living.",
+      "source_pdf": "Week 9ab. Judgment.pdf",
+      "confidence": "high",
+      "match_notes": "Retains Hebrew 'Havah' (not Eve); doubled pronoun 'she, she was'; repeated twice with commentary"
+    },
+    {
+      "ref_start": "Gen.3.21",
+      "ref_end": "Gen.3.21",
+      "translation": "And the Lord God made for the man and for his wife tunics of skin, And he clothed them.",
+      "source_pdf": "Week 9ab. Judgment.pdf",
+      "confidence": "high",
+      "match_notes": "Clothing provision block; repeated twice; distinctive 'tunics of skin' phrasing"
+    },
+    {
+      "ref_start": "Gen.3.22",
+      "ref_end": "Gen.3.24",
+      "translation": "And the Lord God said: 'Behold, the man has become like one of us to know good and bad. And now . . . lest he send out his hand and take even from the tree of life, and eat, and live forever . . .' And the Lord God sent him from the garden eastward, to serve the ground from which he was taken. And he banished the man. And he made dwell east of the garden of Eden cherubim and a flaming whirling sword to keep the way of the tree of life.",
+      "source_pdf": "Week 9ab. Judgment.pdf",
+      "confidence": "high",
+      "match_notes": "Banishment block; repeated twice; distinctive 'flaming whirling sword' and ellipsis-interrupted divine speech preserving Hebrew suspense"
+    },
+    {
+      "ref_start": "Gen.4.1",
+      "ref_end": "Gen.4.1",
+      "translation": "Now the man knew Eve, his wife. And she became pregnant. And she bore Cain. And she said: 'I have created a man with the Lord.'",
+      "source_pdf": "Week 10a. Cain Narrative Pt 1 (1).pdf",
+      "confidence": "high",
+      "match_notes": "Explicit example in task description; repeated 3+ times; distinctive 'created a man with the Lord' (not 'gotten a man from the Lord'); Hebrew kanah = create discussed"
+    },
+    {
+      "ref_start": "Gen.4.2",
+      "ref_end": "Gen.4.2",
+      "translation": "And again, she bore his brother, Abel. And Abel was a caretaker of sheep, but Cain, he was a server of the ground.",
+      "source_pdf": "Week 10a. Cain Narrative Pt 1 (1).pdf",
+      "confidence": "high",
+      "match_notes": "Abel introduction block; repeated 3 times; distinctive 'caretaker of sheep' and 'server of the ground' phrasing; contrast emphasized"
+    },
+    {
+      "ref_start": "Gen.4.3",
+      "ref_end": "Gen.4.5",
+      "translation": "And it happened after some time. And Cain brought a gift to the Lord from the fruit of the ground. But Abel, he brought, even he, from the firstborn of his flock and their fat. And the Lord paid attention to Abel and his gift. But to Cain and his gift he did not pay attention.",
+      "source_pdf": "Week 10a. Cain Narrative Pt 1 (1).pdf",
+      "confidence": "high",
+      "match_notes": "Sacrifice block; repeated 3 times; distinctive 'paid attention' (not 'looked with favor') and 'even he' emphatic phrasing"
+    },
+    {
+      "ref_start": "Gen.4.5",
+      "ref_end": "Gen.4.7",
+      "translation": "And Cain was very angry. And his face fell. And the Lord said to Cain: 'Why are you angry? And why is your face fallen? Is it not that, if you do well, there will be a lifting up? But if you don't do well, sin is lying at the opening and to you its desire. But you will rule over it.'",
+      "source_pdf": "Week 10a. Cain Narrative Pt 1 (1).pdf",
+      "confidence": "high",
+      "match_notes": "God's warning to Cain block; repeated 5 times; distinctive 'lying at the opening' (not 'crouching at the door') and 'there will be a lifting up'"
+    },
+    {
+      "ref_start": "Gen.4.8",
+      "ref_end": "Gen.4.8",
+      "translation": "And Cain spoke to Abel, his brother. And it happened when they were in the field. Cain rose up against Abel, his brother. And he killed him.",
+      "source_pdf": "Week 10b. Cain Narrative Pt 2 (1).pdf",
+      "confidence": "high",
+      "match_notes": "Cain kills Abel narrative; distinctive 'rose up against' phrasing"
+    },
+    {
+      "ref_start": "Gen.4.9",
+      "ref_end": "Gen.4.12",
+      "translation": "And the Lord said to Cain: 'Where is Abel, your brother.' And he said: 'I don't know. Am I my brother's keeper?' And he said: 'What have you done?! The voice of the blood of your brother is crying to me from the ground. And now . . . Cursed are you from the ground that opened its mouth to take the blood of your brother from your hand. Though you serve the ground, it will not again give its strength to you. A roamer and wanderer you will be on the earth.'",
+      "source_pdf": "Week 10b. Cain Narrative Pt 2 (1).pdf",
+      "confidence": "high",
+      "match_notes": "God's second confrontation with Cain; repeated 4 times; distinctive 'voice of the blood' and 'roamer and wanderer' phrasing"
+    },
+    {
+      "ref_start": "Gen.4.13",
+      "ref_end": "Gen.4.16",
+      "translation": "And Cain said to the Lord: 'My punishment is too great to bear. Behold, you have banished me this day from upon the face of the ground. And from your face I will be hidden. And I will be a roamer and wanderer on the earth. And it will be that all who find me will kill me.' And the Lord said to him: 'Therefore, all who kill Cain it will be avenged seven times.' And the Lord set a sign on Cain, to not smite him, all who find him. And Cain went out from the face of the Lord. And he dwelled in a land of wandering, east of Eden.",
+      "source_pdf": "Week 10b. Cain Narrative Pt 2 (1).pdf",
+      "confidence": "high",
+      "match_notes": "Cain's response and exit block; repeated 4 times; distinctive 'land of wandering' (Nod interpreted) and 'smite' phrasing"
+    },
+    {
+      "ref_start": "Gen.4.17",
+      "ref_end": "Gen.4.22",
+      "translation": "And Cain knew his wife. And she became pregnant And she bore Enoch. And he was building a city, And he called the name of the city according to the name of his son, Enoch. And to Enoch was born Irad. And Irad begat Mekhuyael And Mekhuyael begat Methushael And Methushael begat Lamech. And Lamech took two wives, the name of one Adah, and the name of the second Zillah. And Adah bore Jabal. He was the father of the dwellers of tents and cattle. And the name of his brother, Jubal. He was the father of all who grasp harp and flute. But Zillah, even she bore Tubal Cain, sharpening all works of brass and iron. And the sister of Tubal Cain, Naamah.",
+      "source_pdf": "Week 10b. Cain Narrative Pt 2 (1).pdf",
+      "confidence": "high",
+      "match_notes": "Cain genealogy block; repeated 4 times; distinctive 'grasp harp and flute' (not 'play'), retains 'Mekhuyael' spelling; 'dwellers of tents and cattle'"
+    },
+    {
+      "ref_start": "Gen.4.23",
+      "ref_end": "Gen.4.23",
+      "translation": "And Lamech said to his wives, Adah and Zillah 'Hear my voice, wives of Lamech. Give ear to my speech. For a man I killed for my wound, and a youth for my hurt. If sevenfold will be avenged for Cain, to Lamech seventy and seven.'",
+      "source_pdf": "Week 10b. Cain Narrative Pt 2 (1).pdf",
+      "confidence": "high",
+      "match_notes": "Lamech's poem; distinctive 'a youth for my hurt' and 'seventy and seven' phrasing"
+    },
+    {
+      "ref_start": "Gen.4.25",
+      "ref_end": "Gen.4.26",
+      "translation": "And Adam again knew his wife. And she bore a son. And she called his name Seth 'For God has set to me a seed in place of Abel, for Cain killed him.' Now, to Seth, even he bore a son. And he called his name Enosh. Then it began, to call on the name of the Lord.",
+      "source_pdf": "Week 10b. Cain Narrative Pt 2 (1).pdf",
+      "confidence": "high",
+      "match_notes": "Seth and Enosh block; repeated 5 times (also as contrast with Gen 4:1); distinctive 'God has set to me a seed' and 'Then it began, to call on the name of the Lord'"
+    },
+    {
+      "ref_start": "Gen.5.1",
+      "ref_end": "Gen.5.2",
+      "translation": "This is the book of the toledot of 'adam.' In the day God created 'adam,' in the likeness of God he made him. Male and female he created them. And he blessed them. And he called their name 'adam' in the day he created them.",
+      "source_pdf": "Week 11b. Flood Literary Devices.pdf",
+      "confidence": "high",
+      "match_notes": "Gen 5:1-2 block; repeated 5 times; retains Hebrew 'adam' untranslated with quotes to highlight ambiguity; explicit ref Gen 5:1 in slide heading"
+    },
+    {
+      "ref_start": "Gen.5.21",
+      "ref_end": "Gen.5.24",
+      "translation": "And Enoch lived 65 years. And he begat Methushalakh And Enoch walked with God after he begat Methushalakh 300 years. And he begat sons and daughters And all the days of Enoch, 365 years. And Enoch walked with God, And he was not, for God took him.",
+      "source_pdf": "Week 12a. Flood Introduction.pdf",
+      "confidence": "high",
+      "match_notes": "Enoch genealogy entry block; retains 'Methushalakh'; distinctive 'he was not, for God took him' phrasing"
+    },
+    {
+      "ref_start": "Gen.5.28",
+      "ref_end": "Gen.5.31",
+      "translation": "And Lamech lived 182 years. And he begat a son. And he called his name Noah, saying, 'This one, he will give us relief from our work, and from the toilsome labor of our hands from the ground which the Lord cursed.' And Lamech lived after he begat Noah 595 years. And he begat sons and daughters. And all the days of Lamech, 777 years. And he died.",
+      "source_pdf": "Week 12a. Flood Introduction.pdf",
+      "confidence": "high",
+      "match_notes": "Lamech entry block; repeated 4 times; distinctive 'relief' (not 'comfort') for Noah's name; 'toilsome labor of our hands'"
+    },
+    {
+      "ref_start": "Gen.6.1",
+      "ref_end": "Gen.6.4",
+      "translation": "When mankind began to multiply on the face of the ground and daughters were born to them, the sons of God saw the daughters of mankind, that they were good. And they took them wives from all that they chose. And the Lord said, 'My Spirit will not strive with mankind for ever, since he is flesh. The days of his life will be 120 years.' (Now the nephilim were in the land in those days — and even after — when the sons of God went into the daughters of men and they bore to them. They were the mighty men of old, renown men.)",
+      "source_pdf": "Week 12b. Flood Introduction_story line.pdf",
+      "confidence": "high",
+      "match_notes": "Sons of God block; repeated 6 times; distinctive 'My Spirit will not strive' and 'renown men' phrasing; retains 'nephilim'"
+    },
+    {
+      "ref_start": "Gen.6.5",
+      "ref_end": "Gen.6.8",
+      "translation": "And the Lord saw that the bad of mankind was great in the earth and all the formation of his heart only bad all day long. And the Lord regretted that he had made mankind on the earth. And he was grieved in his heart. And the Lord said, 'I will wipe out mankind whom I have created from upon the face of the ground, from mankind to cattle, to creeping things, to birds of the heavens. For I regret that I have made them.' But Noah had found favor in the eyes of the Lord.",
+      "source_pdf": "Week 12b. Flood Introduction_story line.pdf",
+      "confidence": "high",
+      "match_notes": "Pre-flood divine decision block; repeated 4 times; distinctive 'the bad of mankind' (not 'wickedness'), 'wipe out' (not 'destroy'), 'grieved in his heart'"
+    },
+    {
+      "ref_start": "Gen.6.9",
+      "ref_end": "Gen.6.10",
+      "translation": "This is the toledot of Noah. Noah was a righteous man. He was blameless among his contemporaries: Noah walked with God. Now Noah begat three sons: Shem, Ham, and Japheth.",
+      "source_pdf": "Week 11b. Flood Literary Devices.pdf",
+      "confidence": "high",
+      "match_notes": "Toledot of Noah introduction block; retains 'toledot'; distinctive 'blameless among his contemporaries' phrasing; repeated in structural analysis"
+    },
+    {
+      "ref_start": "Gen.6.11",
+      "ref_end": "Gen.6.13",
+      "translation": "And the earth was corrupt before God, And the earth was full of violence. And God looked upon the earth, and behold, it was corrupt; for all flesh had corrupted its way on the earth. And God said to Noah, 'The end of all flesh is come before me, for the earth is full of violence through them; and behold, I will destroy them with the earth.'",
+      "source_pdf": "Week 12b. Flood Introduction_story line.pdf",
+      "confidence": "high",
+      "match_notes": "Earth corruption block; repeated 5 times including discussion of 'ruined' as better translation; distinctive 'all flesh had corrupted its way'"
+    },
+    {
+      "ref_start": "Gen.8.1",
+      "ref_end": "Gen.8.1",
+      "translation": "And God remembered Noah, and all the wild animals and all the domestic animals which were with him in the ark And God caused a wind to pass over the earth and the waters subsided.",
+      "source_pdf": "Flood Story Excerpts.pdf",
+      "confidence": "high",
+      "match_notes": "God remembers Noah block; repeated twice with alternative 'And the Spirit of God passed over the earth' noted as valid reading; distinctive 'wild animals / domestic animals' distinction"
+    },
+    {
+      "ref_start": "Gen.8.21",
+      "ref_end": "Gen.8.22",
+      "translation": "And the Lord said in his heart, I will not again curse the ground on account of man, for the thought of man's heart is evil from his youth; And I will not again destroy every living thing, as I have done. Henceforth, all the days of the earth, seed time and harvest, and cold and heat, and summer and winter, and day and night, will not cease.",
+      "source_pdf": "Week 14a. New Old World.pdf",
+      "confidence": "high",
+      "match_notes": "Post-flood divine speech block; distinctive 'said in his heart' and full cycle list; explicit Gen 8:21-22 heading"
+    },
+    {
+      "ref_start": "Gen.9.1",
+      "ref_end": "Gen.9.7",
+      "translation": "And God blessed Noah and his sons, and said to them, Be fruitful and multiply and fill the earth. And let the fear of you and the dread of you be upon every animal of the earth, and upon all birds of the heavens upon all that moves on the ground and upon all the fish of the sea: Into your hand they are delivered. Every moving thing that lives will be food for you. As the grain I give you everything. Only, the flesh with its life, its blood, you shall not eat. And indeed, your blood, the blood of your lives, will I require: At the hand of every animal will I require it. At the hand of man, at the hand of each the blood of his brother, I will require the life of man. Whoever sheds man's blood, by man shall his blood be shed; for in the image of God he made man. But you all, be fruitful and multiply: swarm on the earth, and multiply on it.",
+      "source_pdf": "Week 14a. New Old World.pdf",
+      "confidence": "high",
+      "match_notes": "Post-flood blessing block; distinctive 'As the grain I give you everything', 'swarm on the earth'; explicit Gen 9:1-7 heading"
+    }
+  ]
+}
