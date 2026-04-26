@@ -1,0 +1,135 @@
+{
+  "metadata": {
+    "extraction_date": "2026-04-25",
+    "scope": "Additional Gen 1-11 blocks missed by initial extraction",
+    "total_entries": 14
+  },
+  "entries": [
+    {
+      "ref_start": "Gen.5.3",
+      "ref_end": "Gen.5.4",
+      "translation": "And Adam lived 130 years. And he begat in his likeness and image. And he called his name Seth. And the days of Adam after he begat Seth were 800 years. And he begat sons and daughters.",
+      "source_pdf": "Week 12a. Flood Introduction.pdf",
+      "confidence": "high",
+      "is_partial": true,
+      "match_notes": "Used as an exemplar of the Gen 5 genealogy formula to illustrate that Seth was not necessarily Adam's firstborn; the 'and he died' closure and total years are omitted in the slide; appears alongside Seth entry as a contrast pair. Covers Gen 5:3-4 only."
+    },
+    {
+      "ref_start": "Gen.5.3",
+      "ref_end": "Gen.5.3",
+      "translation": "And Adam [adam] was 130 years old\nAnd he begat in his likeness, according to his image\nAnd he called his name Seth",
+      "source_pdf": "Week 11b. Flood Literary Devices.pdf",
+      "confidence": "high",
+      "is_partial": true,
+      "match_notes": "Three-line poetic rendering of Gen 5:3 alone used to debate whether 'his image' refers to Adam's image or God's image; 'adam' retained with brackets; repeated 3 times. Distinct from the Week 12a prose version above."
+    },
+    {
+      "ref_start": "Gen.5.6",
+      "ref_end": "Gen.5.8",
+      "translation": "And Seth lived 105 years. And he begat Enosh. And Seth lived after he begat Enosh 807 years. And he begat sons and daughters.",
+      "source_pdf": "Week 12a. Flood Introduction.pdf",
+      "confidence": "high",
+      "is_partial": true,
+      "match_notes": "Paired with the Adam entry (Gen 5:3-4) to illustrate that Enosh was not necessarily Seth's firstborn; the 'and all the days of Seth' closure and death notice are omitted. Covers Gen 5:6-7 only (no total years or death)."
+    },
+    {
+      "ref_start": "Gen.6.5",
+      "ref_end": "Gen.6.13",
+      "translation": "And the Lord saw that the evil of mankind had become great on the earth and all the formation of the thoughts of his heart was evil continually. And the Lord regretted that he had made mankind on the earth, and his heart was grieved. And the Lord said, 'I will wipe mankind, whom I have created, from the face of the earth--from mankind to animals, to creeping things, and birds of the heavens--for I regret that I have made them.' But Noah found favor in the sight of the Lord. Noah was a righteous man. He was blameless among his contemporaries: Noah walked with God. Now Noah begat three sons: Shem, Ham, and Japheth. And the earth was corrupt in the sight of God, and the earth was filled with violence. And God observed the earth and, indeed, it was corrupted, for all living creatures on the earth were corrupt. So God said to Noah, . . .",
+      "source_pdf": "Week 11b. Flood Literary Devices.pdf",
+      "confidence": "high",
+      "is_partial": false,
+      "match_notes": "Explicit label '(Gen 6:5-13)' on the slide; rendered as a single continuous prose block bridging the Yahweh/Elohim narrative sections including toledot of Noah in v.9; repeated 3 times in the structural analysis discussion. Note: the individual sub-sections (6:5-8, 6:9-10, 6:11-13) already exist as separate entries in extracted.json with different source PDFs; this entry captures the full contiguous block as presented here. The slide explicitly identifies this as a translation 'retaining some Hebrew word order.'"
+    },
+    {
+      "ref_start": "Gen.6.14",
+      "ref_end": "Gen.6.14",
+      "translation": "Make to you an ark of wood of gopher\n      reeds you will make the ark\nand you will cover it inside and outside with covering",
+      "source_pdf": "Flood Story Excerpts.pdf",
+      "confidence": "high",
+      "is_partial": true,
+      "match_notes": "Identified explicitly as the 'HEBREW CONSTRUCTION' of Gen 6:14a-b (the core command); the dimensions and floor/window details of 6:15-16 are described as 'added as background' but not quoted verbatim as a translation block; this three-line block is flagged as 'the main statement'; the note explains 'reeds you will make the ark' (not 'rooms/nests'); 'cover' = kaphar (atonement)."
+    },
+    {
+      "ref_start": "Gen.6.22",
+      "ref_end": "Gen.6.22",
+      "translation": "And Noah did according to all that God commanded.\n                        Thus he did!",
+      "source_pdf": "Flood Story Excerpts.pdf",
+      "confidence": "high",
+      "is_partial": false,
+      "match_notes": "Rendered in bold/emphatic form under heading 'NARRATIVE COMMENT'; the emphatic 'Thus he did!' reflects the duplicated verb construction in Hebrew (asah / ken asah); discussed as showing God-Noah dynamic: 'God speaks, Noah obeys.' Structurally significant as an emphatic close to the ark-building section."
+    },
+    {
+      "ref_start": "Gen.8.6",
+      "ref_end": "Gen.8.12",
+      "translation": "And he sent out the dove from with him . . . And it returned to him to the ark. . . And he sent out his hand. And he took it. And he brought it to him to the ark. . . . [He sent out the raven . . .]",
+      "source_pdf": "Flood Story Excerpts.pdf",
+      "confidence": "medium",
+      "is_partial": true,
+      "match_notes": "The bird-sending episode is cited in ellipsis form (suspension dots indicate portions not quoted) as a focused narrative illustration of the dove's return; the raven's account is given only as a single-line contrast 'He sent out the raven . . .'; the dove verses (8:8-12) are the focus. The mention of '40 days' context (v.6) and 'torn olive leaf' (v.11) confirms this covers 8:6-12 even though the full text is not displayed consecutively. Confidence medium because full text is fragmented/elliptical."
+    },
+    {
+      "ref_start": "Gen.8.20",
+      "ref_end": "Gen.8.20",
+      "translation": "Noah building an altar to Yahweh",
+      "source_pdf": "Flood Story Literary Clues.pdf",
+      "confidence": "low",
+      "is_partial": true,
+      "match_notes": "Listed in the narrator's comments table as '8:20 - Noah building an altar to Yahweh' under the Yahweh column of a structural analysis table (contrasting with Elohim references); single-phrase rendering, not a full verse quote. Confidence low as this is a summary paraphrase in a table, not a block translation."
+    },
+    {
+      "ref_start": "Gen.9.9",
+      "ref_end": "Gen.9.11",
+      "translation": "I'm raising my covenant with you\n   I will not again cut off all flesh\n   I will not again destroy the earth by flood",
+      "source_pdf": "Flood Story Literary Clues.pdf",
+      "confidence": "medium",
+      "is_partial": true,
+      "match_notes": "Summarized in a speech-content table under 'Elohim said, to Noah and to his sons, saying' for Gen 9:9-11; rendered as three brief clauses paraphrasing the speech content (not a full verbatim translation). Medium confidence because this is a table summary format rather than a full verse display block."
+    },
+    {
+      "ref_start": "Gen.9.12",
+      "ref_end": "Gen.9.16",
+      "translation": "This is the covenant\n   My bow will be a sign\n   The waters of flood will not again destroy all flesh",
+      "source_pdf": "Flood Story Literary Clues.pdf",
+      "confidence": "medium",
+      "is_partial": true,
+      "match_notes": "Summarized in the same speech-content table under 'Elohim said' for Gen 9:12-16; three clauses covering the bow/sign portion; described as 'continuation of the same speech, but structurally separated for content purposes.' Medium confidence for same reason as 9:9-11."
+    },
+    {
+      "ref_start": "Gen.7.11",
+      "ref_end": "Gen.7.16",
+      "translation": "the windows of heavens\n   the fountains of the deep.",
+      "source_pdf": "Week 11a. Flood Structure (1).pdf",
+      "confidence": "low",
+      "is_partial": true,
+      "match_notes": "Listed as part of the 'Crescendo' section under Gen 7:11-16 with 'cosmic terminology: the windows of heavens / the fountains of the deep.' Only these two phrases are presented as translated text; the rest of vv.11-16 is summarized structurally. Confidence low because this is only a phrase-level fragment of the passage."
+    },
+    {
+      "ref_start": "Gen.7.17",
+      "ref_end": "Gen.7.24",
+      "translation": "the flood was on the earth,\nthe waters increased,\nthe waters prevailed and increased greatly,\nthe mountains were covered,\nall flesh died,\nthe waters prevailed 150 days",
+      "source_pdf": "Week 11a. Flood Structure (1).pdf",
+      "confidence": "low",
+      "is_partial": true,
+      "match_notes": "Six-clause crescendo summary of Gen 7:17-24 presented as climax of the flood's destructive peak; the clauses track a crescendo of intensity matching the Hebrew narrative but are summarized/condensed rather than directly translated verse by verse. Confidence low as these are structural summary phrases rather than a full verbatim translation."
+    },
+    {
+      "ref_start": "Gen.8.16",
+      "ref_end": "Gen.8.17",
+      "translation": "You and your family exit the ark\n   Cause the animals to exit so they will multiply",
+      "source_pdf": "Flood Story Literary Clues.pdf",
+      "confidence": "low",
+      "is_partial": true,
+      "match_notes": "Speech-content summary in Elohim speeches table for Gen 8:16-17; two-clause summary under 'Elohim spoke to Noah saying.' Low confidence because this is a table paraphrase, not a displayed translation block."
+    },
+    {
+      "ref_start": "Gen.9.17",
+      "ref_end": "Gen.9.17",
+      "translation": "The covenant between me and all flesh",
+      "source_pdf": "Flood Story Literary Clues.pdf",
+      "confidence": "low",
+      "is_partial": true,
+      "match_notes": "Final line in the Elohim speeches table for the flood account: 'Elohim said, to Noah / The covenant between me and all flesh.' Single-clause summary closing the covenant section. Low confidence as this is a table entry, not a displayed translation block."
+    }
+  ]
+}
