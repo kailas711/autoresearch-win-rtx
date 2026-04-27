@@ -1129,7 +1129,7 @@ def _run_training_once(runtime, tokenizer, config, device_batch_size, smoke_test
             with autocast_ctx:
                 loss = model(x, y)
             loss = loss / grad_accum_steps
-            train_loss = train_loss + loss.detach()
+            train_loss.add_(loss.detach())
             loss.backward()
             x, y, epoch = next(train_loader)
 

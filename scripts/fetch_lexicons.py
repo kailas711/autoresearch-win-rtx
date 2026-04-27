@@ -140,7 +140,10 @@ def parse_bdb_xml(xml_text: str) -> dict[str, dict]:
     Parse BrownDriverBriggs.xml (namespace-aware).
 
     Returns dict keyed by BDB entry id (e.g. "a.ac.aa") with:
-      { "lemma": str, "pos": str, "defs": [str], "raw_strongs": int|None }
+      { "lemma": str, "pos": str, "defs": [str], "raw_strongs": str|None }
+
+    `raw_strongs` is a string (not int) because Hebrew Strong's numbers may
+    carry alphabetic suffixes for homographs (e.g. "935", "935a", "935b").
     """
     xml_text = _strip_ns_xml(xml_text)
     root = ET.fromstring(xml_text)
@@ -157,12 +160,14 @@ def parse_bdb_xml(xml_text: str) -> dict[str, dict]:
         pos_el = entry.find(_ns("pos"))
         pos = (pos_el.text or "").strip() if pos_el is not None else ""
 
-        # Raw Strong's number: appears as text node between </w> and <pos>
-        raw_strongs: int | None = None
+        # Raw Strong's number: appears as text node between </w> and <pos>.
+        # Capture optional alphabetic suffix (e.g. "1234a") to preserve homograph distinctions.
+        raw_strongs: str | None = None
         if w_el is not None and w_el.tail:
-            m = re.search(r"\b(\d{1,5})\b", w_el.tail)
+            m = re.search(r"\b(\d{1,5})([a-z]?)\b", w_el.tail)
             if m:
-                raw_strongs = int(m.group(1))
+                # Normalize leading zeros via int(), reattach suffix if any.
+                raw_strongs = f"{int(m.group(1))}{m.group(2)}"
 
         defs = _collect_bdb_defs(entry)
         entries[eid] = {
@@ -194,10 +199,12 @@ def parse_lex_index(xml_text: str) -> dict[str, dict]:
         strong_raw = xref.get("strong", "")
         if not strong_raw:
             continue
-        try:
-            strong_key = f"H{int(strong_raw)}"
-        except ValueError:
+        # Hebrew Strong's may carry an alphabetic suffix for homographs (e.g. "935a").
+        # Normalize leading zeros on the digit part, preserve any suffix.
+        m = re.match(r"^(\d+)([a-z]?)$", strong_raw)
+        if not m:
             continue
+        strong_key = f"H{int(m.group(1))}{m.group(2)}"
 
         w_el = entry.find(_ns("w"))
         lemma = (w_el.text or "").strip() if w_el is not None else ""
