@@ -94,39 +94,14 @@ class TinyTransformer(nn.Module):
         return self.head(x)
 
 
-def make_batch(sequences: list[list[int]], pad_id: int, block_size: int, device: str):
-    batch = random.choices(sequences, k=8)
+def make_batch(sequences: list[list[int]], pad_id: int, block_size: int, device: str, batch_size: int = 8):
+    batch = random.choices(sequences, k=batch_size)
     max_len = min(block_size, max(len(s) for s in batch))
     x = torch.full((len(batch), max_len), pad_id, dtype=torch.long)
     for i, s in enumerate(batch):
         s = s[:max_len]
         x[i, : len(s)] = torch.tensor(s, dtype=torch.long)
     return x.to(device)
-
-
-def generate_for_scoring(model: "TinyTransformer", tokenizer, hebrew: str, max_new: int = 128) -> str:
-    bos = tokenizer.encode_single_token("<|bos|>")
-    sep = tokenizer.encode_single_token("<|sep|>")
-    eos = tokenizer.encode_single_token("<|eos|>")
-    he_ids = tokenizer.encode_ordinary(hebrew)
-    ids = [bos] + he_ids + [sep]
-    device = next(model.parameters()).device
-    cur = torch.tensor(ids, dtype=torch.long, device=device).unsqueeze(0)
-    model.train(False)  # inference mode (avoid the .eval() builtin name)
-    with torch.no_grad():
-        for _ in range(max_new):
-            if cur.size(1) >= model.cfg.block_size:
-                break
-            logits = model(cur)[:, -1, :]
-            next_id = int(logits.argmax(dim=-1).item())
-            cur = torch.cat([cur, torch.tensor([[next_id]], device=device)], dim=1)
-            if next_id == eos:
-                break
-    out_ids = cur.squeeze(0).tolist()
-    after_sep = out_ids[out_ids.index(sep) + 1:] if sep in out_ids else out_ids
-    if eos in after_sep:
-        after_sep = after_sep[: after_sep.index(eos)]
-    return tokenizer.decode(after_sep)
 
 
 def main(smoke_test: bool = False) -> dict:
