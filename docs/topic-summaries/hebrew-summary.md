@@ -1,7 +1,7 @@
 # Topic Summary — Hebrew translation
 
-**Last updated:** 2026-04-27 (round 2 — post-Verifier-1)
-**Active rounds:** 2
+**Last updated:** 2026-04-27 (round 3 — post-Verifier-2 PASS)
+**Active rounds:** 3
 
 ---
 
@@ -13,25 +13,25 @@ Lexicon fixtures are the second major accomplishment. Seven fixture files are co
 
 The orchestration doc moved to v3 (PR #15), introducing the Topic Director / Synthesizer split. The research loop is now runnable in principle, but two gates block ML signal: (a) Plan #6 corpus assembly (per-token `token_id` + `fingerprint` + multi-dimensional metadata) does not yet exist — the model currently trains on raw Genesis parallel text with no lexicon augmentation; (b) known lexicon defects (Plan #7a/b/c) will degrade corpus quality if left unresolved before assembly. Model training has not been attempted at scale; there are no results in `results.tsv`; the chrF metric is a smoke scaffold only.
 
-**Round 2 update (Verifier-1 findings):** BDB binyan coverage is **86.2%** (1,414 / 1,641 strict-verb entries), not the 1.1% stated in round 1. The round 1 director-note was based on a stale pending-pile claim; Verifier-1 measured the actual fixture. This is a significant positive finding — the BDB binyan defect is much smaller than believed. Three sub-defects remain: (1) 227 verb entries with `binyanim=None` (mechanical extraction gap); (2) הלך misclassified as `grammar_normalized=noun` across its 2 entries (POS normalizer failure); (3) עשה absent from fixture entirely (possible source omission or alternate-spelling filing). 0 over-extraction cases found. User chose Option A: close the 3 BDB sub-defects (Mode 3 Builder), then audit #7c HALOT, then Plan #6.
+**Round 2 update (Verifier-1 findings):** BDB binyan coverage is **86.2%** (1,414 / 1,641 strict-verb entries), not the 1.1% stated in round 1. The round 1 director-note was based on a stale pending-pile claim; Verifier-1 measured the actual fixture. Three sub-defects remained: (1) 227 verb entries with `binyanim=None`; (2) הלך misclassified as `grammar_normalized=noun`; (3) עשה absent from fixture. User chose Option A: close the 3 BDB sub-defects, then audit #7c HALOT, then Plan #6.
 
-**Cross-repo update:** fellwork-api PR #6 merged to main at commit `47f7c7f`, shipping the decoder framework and Beta Code from font CMAP. This is the same framework that produced the iter-4 fixtures; future fix passes regenerating `lex_bdb.json` must use this decoder, not a different version. PRs #16 and #17 merged on autoresearch-win-rtx: `docs/domain-knowledge-cache.md` is now present (created via PR #16); v3 orchestration shipped via PR #17.
+**Round 3 update (Verifier-2 PASS):** BDB binyan is now at **99.3%** (1,683 / 1,695 verb entries). All 3 named sub-defects are resolved. Builder investigation doc (`bdb-binyan-investigation.md`, commit `25d8b35`) traced all three to Tier 1 mechanical extractor bugs; Iron Law complied (investigation preceded fix by 7 minutes). The fix (commit `e52abd2` on `fix/bdb-binyan-residuals`) yielded a non-trivial bonus: 587 additional non-verb entries recovered by the compound-Strong's parser, expanding total fixture from 8,846 to 9,433 entries. Over-extraction remains 0; the recovered entries carry no binyanim. 5 Aramaic-stem entries were cross-verified against source body text by Verifier-2 — no hallucination. The 12 remaining `binyanim=None` entries are addendum/cross-ref stubs with no morphological data; these are accepted as known-source-gap, not a defect.
+
+`docs/domain-knowledge-cache.md` now contains four BDB-specific subsections appended by the Builder: Aramaic stem labels (Pe./Pa./Haph./Ithpa./Shaph./Aph./Ithpe./Po.), Compound Strong's entries format, Implicit Qal verbs, and Roman-numeral headword prefix. These are project-bound for all future BDB Builder dispatches.
+
+**Cross-repo status:** fellwork-api PR #6 merged to main at `47f7c7f` (decoder framework). fellwork-api PR #8 (BDB residual fix) opened and paired with autoresearch `fix/bdb-binyan-residuals` branch. PR #6 (fellwork-api decoder framework) is the decoder dependency for any future `lex_bdb.json` regeneration.
 
 ---
 
 ## What changed in the most recent round
 
-**Round 1 (bootstrap, same session 2026-04-27):** The PR #11 → #13 → #14 → #15 chain merged:
+**Round 2 (post-Verifier-1, 2026-04-27):** Verifier-1 audited `verify/bdb-binyan` branch (commit `fcb0850`), measured real BDB coverage at 86.2% (1,414/1,641 verb entries), correcting the stale 1.1% pending-pile claim. Round 2 director-note dispatched a Mode 3 Builder on `fix/bdb-binyan-residuals` with investigation-first discipline. Round 3 routes the Verifier-2 result and plans the #7c re-audit.
 
-- **PR #11** (`e33a179`, `17df62c`): cleaned stray characters and HTML entities from `genesis_full_hebrew.json` (1,532 verses); updated `fetch_genesis_full.py` to prevent re-introduction.
-- **PR #13** (`2e83853`, `f62d9e0`): iter-3 decoder redesign fixtures — all four Accordance lexicons pass G.1; BDAG body-residue corruption fixed.
-- **PR #14** (`efc203a`): iter-4 critical fixes regenerating all four Accordance lexicons — KM gk_number 100%, HALOT binyanim 95.6%, BDAG multi-sense parsing live.
-- **PR #15** (`dc6c4a5`, `1295624`): orchestration doc v3 — substance/orchestration split, Topic Director + Synthesizer roles, spawn templates, lessons appendix expanded.
-- **PR #16**: `docs/domain-knowledge-cache.md` created (BDB-specific patterns, HALOT patterns, Accordance binary formats, all domain hints consolidated).
-- **PR #17**: v3 orchestration update.
-- **fellwork-api PR #6** (`47f7c7f`): decoder framework + Beta Code from font CMAP shipped to main.
+**Round 3 (post-Verifier-2, 2026-04-27 — this round):** Three phases closed cleanly.
 
-**Round 2 (post-Verifier-1, 2026-04-27):** Verifier-1 audited `verify/bdb-binyan` branch (commit `fcb0850`). The round 1 director-note claimed BDB binyan at 1.1% and treated it as a near-total absence. Verifier-1 found the actual coverage is **86.2%** — 1,414 of 1,641 strict-verb entries have binyanim populated using the real schema fields (`grammar_normalized` and `headword_consonantal`, not `pos` and `lemma`). The discrepancy came from the pending-pile claim never being measured against the current fixture. Verifier identified 3 residual sub-defects: 227 verb entries missing binyanim, הלך misclassified as noun, and עשה absent from fixture. Over-extraction is zero. User chose Option A: fix the 3 sub-defects (Mode 3 Builder on `fix/bdb-binyan-residuals`), then re-audit #7c HALOT, then Plan #6. Round 2 director-note contains the refined Builder brief.
+Builder dispatched on `fix/bdb-binyan-residuals` produced `docs/audits/bdb-binyan-investigation.md` (commit `25d8b35`) tracing all 3 sub-defects to Tier 1 mechanical extractor bugs: (1) Aramaic stem labels absent from `BDB_BINYANIM` list in `bdb_hooks.rs`; (2) compound-Strong's `N, M\t` format dropped by `strongs_tab` parser (root cause of both הלך absence and the 227-verb residual overlap); (3) Roman-numeral headword prefix `I.`/`II.` causing empty consonantal decode for עשה. Fix commit `e52abd2` applied all three: expanded Aramaic stem table, compound-Strong's parser, and Roman-numeral headword fallback. Fixture regenerated from fellwork-api decoder at `47f7c7f`. fellwork-api PR #8 opened in parallel.
+
+Verifier-2 audited `verify/bdb-binyan-r2` branch (commit `3e771d2`) and issued **PASS**: verb coverage 1,683/1,695 (99.3%), all named samples pass independently, over-extraction 0, Iron Law complied, 5 Aramaic-stem entries cross-verified against source body text with no hallucination detected. Compound-Strong's bonus (+587 entries) verified structurally clean — no binyanim added to non-verb entries. The 810-entry total expansion (54 verb + 587 non-verb + absorption cleanup) is consistent with baseline patterns.
 
 ---
 
@@ -47,22 +47,26 @@ The orchestration doc moved to v3 (PR #15), introducing the Topic Director / Syn
 
 **What's blocking:**
 - Plan #6 not started: no per-token table with `token_id` + `fingerprint` + passage metadata exists; training currently runs on raw parallel text only, no lexicon-augmented features
-- Plan #7b (BDB binyan residuals): 86.2% coverage on master — 3 small sub-defects remain (227 verb entries missing binyanim, הלך POS misclassification, עשה absent from fixture). These are bounded, not a structural absence. Builder dispatched on `fix/bdb-binyan-residuals`.
-- Plan #7c (HALOT multi-stem entries): `natan` / `shaphat` reportedly missing — this claim has NOT been re-audited against current master. Per the round 1 lesson (stale 1.1% → actual 86.2%), the #7c baseline must be re-measured before any Builder runs on it. Director round 3 will trigger the #7c re-audit after Verifier-2 on BDB sub-defects passes.
-- Plan #7a (BDAG GK/Greek Mounce): 0% — not a Hebrew blocker but blocks Greek track
-- No model has been trained at scale; no rubric metric result exists; chrF baseline unknown
+- Plan #7b (BDB binyan): **RESOLVED.** 99.3% on `fix/bdb-binyan-residuals`; fellwork-api PR #8 open. Pending merge coordination (see Open questions).
+- Plan #7c (HALOT multi-stem): `natan` / `shaphat` reportedly missing — baseline claim NOT yet re-audited. Per the round 1 lesson, re-measure before any Builder runs. Director round 3 dispatches Verifier-only on `verify/halot-multistem`. Outcome determines whether #7c needs a Builder fix or is another stale baseline.
+- Plan #7a (BDAG GK/Greek Mounce): 0% — not a Hebrew blocker; deferred to Greek track
+- No model trained at scale; no rubric metric result; chrF baseline unknown
 - Rust export path (Phase 5) not designed
 
 **What's next (Director's recommendation):**
-Builder on `fix/bdb-binyan-residuals` per round 2 director-note (investigation-first, then fix). After Verifier-2 passes: Director round 3 re-audits #7c HALOT baseline, then Plan #6. Plan #6 is closer than round 1 believed — BDB binyan was never the structural blocker it appeared to be.
+Verifier-only audit on `verify/halot-multistem` per round 3 director-note brief. This is the last data-quality gate before Plan #6. If #7c re-audit reveals stale baseline (similar to #7b), Plan #6 corpus assembly is immediately next. If real defects found, Director round 4 refines a Builder brief. BDB binyan ML-acceptable at 99.3%; remaining 12 null entries are known-source-gap stubs and do not block corpus assembly.
 
 ---
 
 ## Open questions
 
-**For Director (round 3, after Verifier-2):**
-- Are #7c HALOT multi-stem and Plan #7a BDAG GK ALSO at higher coverage than the stale pending-pile claimed? The 1.1%→86.2% lesson must be applied: re-audit both against current master before any Builder runs. Expect similar surprises.
-- HALOT binyanim is at 95.6% on verbs. Is the remaining 4.4% acceptable for Plan #6, or does it need another pass? Defer this question until #7b residuals close.
+**Immediate (round 3 in-flight):**
+- #7c HALOT multi-stem baseline: does the current `lex_halot.json` on master actually reflect "natan/shaphat missing"? The round 1 lesson mandates re-measurement. Verifier-only dispatch on `verify/halot-multistem` is the immediate next action. If HALOT multi-stem coverage is ≥80% and named samples pass, the #7c claim is stale and Plan #6 is unblocked.
+- HALOT binyanim is at 95.6% on verbs. Is the remaining 4.4% an acceptable known-gap for Plan #6, or does it require a Builder pass? Defer this question until the #7c Verifier finding is known — if #7c reveals stale baseline, the 4.4% is the only open HALOT question.
+
+**Cross-repo PR coordination (orchestration, not data quality):**
+- fellwork-api PR #8 (BDB extractor fix, branch `fix/bdb-binyan-residuals`) must merge to fellwork-api master BEFORE the autoresearch PR is opened. The autoresearch `fix/bdb-binyan-residuals` branch regenerated `lex_bdb.json` against a fellwork-api branch HEAD (`171fb0a`) that has not yet merged to fellwork-api main. If the autoresearch PR is merged first, the fixture in autoresearch master was generated from a non-main decoder revision. Correct merge order: (1) merge fellwork-api PR #8, (2) open autoresearch PR from `fix/bdb-binyan-residuals`, (3) merge autoresearch PR. Flag for Team Lead.
+- HALOT `domain-knowledge-cache.md` note (round 1 pattern): if #7c Verifier finds the baseline stale, no new domain knowledge is needed for that lexicon. If real defects found, the Builder brief for #7c must reference the HALOT-specific patterns section of `docs/domain-knowledge-cache.md`.
 
 **For user (deferred — not blocking immediate work):**
 - Confirm Plan #6 corpus assembly schema: should `passage_id` be verse-level (e.g., `Gen.1.1`) or passage-level (pericopae blocks)? This determines how the passage_metadata table keys.
@@ -70,4 +74,5 @@ Builder on `fix/bdb-binyan-residuals` per round 2 director-note (investigation-f
 - HALOT and BDB both have Hebrew-side coverage; KM is the Greek Mounce lexicon and also contains Hebrew cross-refs via `gk H{n}` pattern. Confirm: for Plan #6 Hebrew-track corpus, are KM's Hebrew cross-references in scope for token augmentation, or only HALOT/BDB?
 
 **Resolved (retired):**
-- `docs/domain-knowledge-cache.md` existence question: NOW EXISTS (PR #16). BDB-specific patterns section present. Builder briefs should reference it directly.
+- `docs/domain-knowledge-cache.md` existence question: NOW EXISTS (PR #16). BDB-specific patterns section present and updated with 4 new subsections from the round 3 Builder investigation. Builder briefs should reference it directly.
+- BDB binyan structural blocker: RESOLVED. 99.3% is ML-acceptable; Plan #6 is no longer blocked on BDB binyan.
