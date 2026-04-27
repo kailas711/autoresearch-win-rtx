@@ -1,14 +1,19 @@
 """
-Walking-skeleton data preparation for Hebrew->English translation.
+Data preparation for Hebrew->English translation.
 
-Reads data/fixtures/gen_1_3_{hebrew,berean}.json, trains a small BPE
+Reads data/fixtures/<corpus>_{hebrew,berean}.json, trains a small BPE
 tokenizer over the combined corpus, encodes each verse pair as a
 prefix-LM sequence, writes binary shards to a cache directory.
+
+Corpus selection via WALKING_SKELETON_CORPUS env var:
+- gen_1_3 (default) -- 80 verses, walking-skeleton fixtures
+- genesis_full -- 1532 verses, full Genesis 1-50 (Sefaria + Berean)
 
 Each sequence: [BOS] <hebrew tokens> [SEP] <english tokens> [EOS]
 
 Usage:
     uv run python prepare_translate.py
+    WALKING_SKELETON_CORPUS=genesis_full uv run python prepare_translate.py
 """
 import json
 import os
@@ -26,15 +31,27 @@ SPLIT_PATTERN = (
     r"""\p{N}{1,2}| ?[^\s\p{L}\p{N}]++[\r\n]*|\s*[\r\n]|\s+(?!\S)|\s+"""
 )
 FIXTURES = Path("data/fixtures")
+CORPUS_CHOICES = ("gen_1_3", "genesis_full")
+
+
+def corpus_name() -> str:
+    name = os.environ.get("WALKING_SKELETON_CORPUS", "gen_1_3")
+    if name not in CORPUS_CHOICES:
+        raise ValueError(f"Unknown corpus {name!r}; expected one of {CORPUS_CHOICES}")
+    return name
 
 
 def cache_dir() -> Path:
-    return Path(os.environ.get("WALKING_SKELETON_CACHE", "data/cache/walking_skeleton"))
+    explicit = os.environ.get("WALKING_SKELETON_CACHE")
+    if explicit:
+        return Path(explicit)
+    return Path("data/cache") / corpus_name()
 
 
 def load_fixtures():
-    he = json.loads((FIXTURES / "gen_1_3_hebrew.json").read_text(encoding="utf-8"))
-    en = json.loads((FIXTURES / "gen_1_3_berean.json").read_text(encoding="utf-8"))
+    name = corpus_name()
+    he = json.loads((FIXTURES / f"{name}_hebrew.json").read_text(encoding="utf-8"))
+    en = json.loads((FIXTURES / f"{name}_berean.json").read_text(encoding="utf-8"))
     assert set(he.keys()) == set(en.keys()), "Hebrew/English ref keys must match"
     refs = sorted(he.keys(), key=lambda r: tuple(int(p) for p in r.split(".")[1:]))
     return [(r, he[r], en[r]) for r in refs]
@@ -79,6 +96,7 @@ def main():
     out = cache_dir()
     out.mkdir(parents=True, exist_ok=True)
 
+    print(f"Corpus: {corpus_name()}")
     pairs = load_fixtures()
     print(f"Loaded {len(pairs)} verse pairs")
 
