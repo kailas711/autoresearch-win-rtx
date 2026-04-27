@@ -13,19 +13,26 @@ from pathlib import Path
 
 import sacrebleu
 
-CACHE_DIR_DEFAULT = Path("data/cache/walking_skeleton")
 GOLD_CATALOG = Path("gold/catalog.json")
+CORPUS_CHOICES = ("gen_1_3", "genesis_full")
+
+
+def corpus_name() -> str:
+    name = os.environ.get("WALKING_SKELETON_CORPUS", "gen_1_3")
+    if name not in CORPUS_CHOICES:
+        raise ValueError(f"Unknown corpus {name!r}; expected one of {CORPUS_CHOICES}")
+    return name
 
 
 def load_gold_subset() -> dict[str, str]:
-    """Return dict ref -> gold English for entries in Gen 1-3."""
+    """Return dict ref -> gold English for all Genesis entries in the catalog."""
     if not GOLD_CATALOG.exists():
         return {}
     catalog = json.loads(GOLD_CATALOG.read_text(encoding="utf-8"))
     out = {}
     for entry in catalog["entries"]:
         ref_start = entry.get("ref_start", "")
-        if not (ref_start.startswith("Gen.1") or ref_start.startswith("Gen.2") or ref_start.startswith("Gen.3")):
+        if not ref_start.startswith("Gen."):
             continue
         out[ref_start] = entry["translation"]
     return out
@@ -43,16 +50,16 @@ def score(model=None, tokenizer=None, *, gold_subset_only: bool = False, cache_d
     If model/tokenizer are None, uses the stub identity translator -- useful for
     smoke-testing the harness itself.
     """
-    cache = cache_dir or Path(os.environ.get("WALKING_SKELETON_CACHE", str(CACHE_DIR_DEFAULT)))
-    _ = cache  # cache is reserved for future use; not currently consumed here
+    _ = cache_dir  # reserved; not currently consumed
 
-    fixtures = Path("data/fixtures/gen_1_3_hebrew.json")
+    name = corpus_name()
+    fixtures = Path(f"data/fixtures/{name}_hebrew.json")
     hebrew_by_ref = json.loads(fixtures.read_text(encoding="utf-8"))
 
     gold = load_gold_subset()
     if gold_subset_only and not gold:
-        # Walking skeleton fallback: use Berean as gold if no real gold found.
-        berean = json.loads(Path("data/fixtures/gen_1_3_berean.json").read_text(encoding="utf-8"))
+        # Fallback: use Berean as gold if no real gold found.
+        berean = json.loads(Path(f"data/fixtures/{name}_berean.json").read_text(encoding="utf-8"))
         gold = berean
 
     refs_to_score = sorted(set(hebrew_by_ref.keys()) & set(gold.keys()))

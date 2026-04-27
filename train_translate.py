@@ -23,13 +23,23 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-CACHE_DIR_DEFAULT = Path("data/cache/walking_skeleton")
 SMOKE_BUDGET_SEC = 30
 FULL_BUDGET_SEC = 120
+CORPUS_CHOICES = ("gen_1_3", "genesis_full")
+
+
+def corpus_name() -> str:
+    name = os.environ.get("WALKING_SKELETON_CORPUS", "gen_1_3")
+    if name not in CORPUS_CHOICES:
+        raise ValueError(f"Unknown corpus {name!r}; expected one of {CORPUS_CHOICES}")
+    return name
 
 
 def cache_dir() -> Path:
-    return Path(os.environ.get("WALKING_SKELETON_CACHE", str(CACHE_DIR_DEFAULT)))
+    explicit = os.environ.get("WALKING_SKELETON_CACHE")
+    if explicit:
+        return Path(explicit)
+    return Path("data/cache") / corpus_name()
 
 
 @dataclass
