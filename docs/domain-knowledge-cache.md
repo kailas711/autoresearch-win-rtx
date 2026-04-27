@@ -77,6 +77,29 @@ Implicit-Qal fallback: verbal entries that lack explicit section headers are pur
 
 If a verb appears absent from the multi-stem extraction (e.g., natan, shaphat reportedly missing): check if it's classified into a different category (CrossRef, single-stem) rather than truly absent. Source binary almost certainly has these as discrete entries.
 
+### HALOT verb entry format — two classes (discovered 2026-04-27, see docs/audits/halot-grammar-investigation.md)
+
+**Class 1 — Explicit-vb. entries (~298 in current fixture):**
+Format: `headword: [DSS|denom.|Ña.] vb. ...`
+`vb.` appears within first ~50 chars of body after `split_halot_line`. Grammar extraction succeeds.
+
+**Class 2 — Implicit-verb entries (high-frequency roots, ~1,200+ estimated):**
+Format A (homograph): `I headword (N x): etymology; qal:...`
+Format B (non-homograph): `headword (N x): etymology; qal:...`
+NO `vb.` label anywhere in entry. Verb identity signaled ONLY by stem section headers (`qal:`, `nif.:`, etc.). This is deliberate HALOT editorial practice for roots whose verbal nature is universally known (e.g., אמר entry 469, ידע entry 2353, עשה entry 4977, בוא entry 743). Grammar extraction currently fails for all Class 2 entries.
+
+### Roman numeral prefix format
+
+HALOT uses `"I headword"` (space, NO dot) for homograph disambiguation. Distinct from BDB's `"I. headword"` (dot + space). The `is_roman_numeral_stub` fallback in pipeline.rs only handles BDB style (`"I."` with dot). HALOT's `"I "` format does NOT trigger the fallback → headword_field='I' → decoded as Hebrew hirek mark `ִ` → headword_consonantal=None for 1,294 entries.
+
+### Hebrew verb נתן (to give, ~2,014 OT occurrences)
+
+Has NO standalone Hebrew verb root entry in the HALOT binary. Exists only via derived nouns (entries 4349, 4352-4355) and Aramaic cognate (entry 7297). HALOT editorial omission, not a parsing defect. Validation sample lists for any fix must note this: נתן cannot be validated as a Hebrew verb entry via HALOT.
+
+### Hebrew verb ראה (to see, ~1,311 OT occurrences)
+
+No extractable Hebrew root entry found in binary section. Derived nouns יִרְאָה (entry 2627) and מַרְאָה (entry 3815) are present. Root may exist under unexpected beta-code encoding — requires targeted binary search. Not confirmed as editorial omission.
+
 ---
 
 ## BDAG-specific patterns
