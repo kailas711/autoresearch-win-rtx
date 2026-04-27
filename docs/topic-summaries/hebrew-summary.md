@@ -1,7 +1,7 @@
 # Topic Summary — Hebrew translation
 
-**Last updated:** 2026-04-27
-**Active rounds:** 1 (bootstrap — no prior summary existed; written from master reality)
+**Last updated:** 2026-04-27 (round 2 — post-Verifier-1)
+**Active rounds:** 2
 
 ---
 
@@ -13,18 +13,25 @@ Lexicon fixtures are the second major accomplishment. Seven fixture files are co
 
 The orchestration doc moved to v3 (PR #15), introducing the Topic Director / Synthesizer split. The research loop is now runnable in principle, but two gates block ML signal: (a) Plan #6 corpus assembly (per-token `token_id` + `fingerprint` + multi-dimensional metadata) does not yet exist — the model currently trains on raw Genesis parallel text with no lexicon augmentation; (b) known lexicon defects (Plan #7a/b/c) will degrade corpus quality if left unresolved before assembly. Model training has not been attempted at scale; there are no results in `results.tsv`; the chrF metric is a smoke scaffold only.
 
+**Round 2 update (Verifier-1 findings):** BDB binyan coverage is **86.2%** (1,414 / 1,641 strict-verb entries), not the 1.1% stated in round 1. The round 1 director-note was based on a stale pending-pile claim; Verifier-1 measured the actual fixture. This is a significant positive finding — the BDB binyan defect is much smaller than believed. Three sub-defects remain: (1) 227 verb entries with `binyanim=None` (mechanical extraction gap); (2) הלך misclassified as `grammar_normalized=noun` across its 2 entries (POS normalizer failure); (3) עשה absent from fixture entirely (possible source omission or alternate-spelling filing). 0 over-extraction cases found. User chose Option A: close the 3 BDB sub-defects (Mode 3 Builder), then audit #7c HALOT, then Plan #6.
+
+**Cross-repo update:** fellwork-api PR #6 merged to main at commit `47f7c7f`, shipping the decoder framework and Beta Code from font CMAP. This is the same framework that produced the iter-4 fixtures; future fix passes regenerating `lex_bdb.json` must use this decoder, not a different version. PRs #16 and #17 merged on autoresearch-win-rtx: `docs/domain-knowledge-cache.md` is now present (created via PR #16); v3 orchestration shipped via PR #17.
+
 ---
 
 ## What changed in the most recent round
 
-The PR #11 → #13 → #14 → #15 chain merged in a single session (2026-04-27):
+**Round 1 (bootstrap, same session 2026-04-27):** The PR #11 → #13 → #14 → #15 chain merged:
 
 - **PR #11** (`e33a179`, `17df62c`): cleaned stray characters and HTML entities from `genesis_full_hebrew.json` (1,532 verses); updated `fetch_genesis_full.py` to prevent re-introduction.
 - **PR #13** (`2e83853`, `f62d9e0`): iter-3 decoder redesign fixtures — all four Accordance lexicons pass G.1; BDAG body-residue corruption fixed.
 - **PR #14** (`efc203a`): iter-4 critical fixes regenerating all four Accordance lexicons — KM gk_number 100%, HALOT binyanim 95.6%, BDAG multi-sense parsing live.
 - **PR #15** (`dc6c4a5`, `1295624`): orchestration doc v3 — substance/orchestration split, Topic Director + Synthesizer roles, spawn templates, lessons appendix expanded.
+- **PR #16**: `docs/domain-knowledge-cache.md` created (BDB-specific patterns, HALOT patterns, Accordance binary formats, all domain hints consolidated).
+- **PR #17**: v3 orchestration update.
+- **fellwork-api PR #6** (`47f7c7f`): decoder framework + Beta Code from font CMAP shipped to main.
 
-These together mean: the extraction pipeline is now trustworthy enough to build on for Hebrew (HALOT + KM + BDB), the corpus fixture is clean, and the governance structure to run research iterations properly exists.
+**Round 2 (post-Verifier-1, 2026-04-27):** Verifier-1 audited `verify/bdb-binyan` branch (commit `fcb0850`). The round 1 director-note claimed BDB binyan at 1.1% and treated it as a near-total absence. Verifier-1 found the actual coverage is **86.2%** — 1,414 of 1,641 strict-verb entries have binyanim populated using the real schema fields (`grammar_normalized` and `headword_consonantal`, not `pos` and `lemma`). The discrepancy came from the pending-pile claim never being measured against the current fixture. Verifier identified 3 residual sub-defects: 227 verb entries missing binyanim, הלך misclassified as noun, and עשה absent from fixture. Over-extraction is zero. User chose Option A: fix the 3 sub-defects (Mode 3 Builder on `fix/bdb-binyan-residuals`), then re-audit #7c HALOT, then Plan #6. Round 2 director-note contains the refined Builder brief.
 
 ---
 
@@ -40,24 +47,27 @@ These together mean: the extraction pipeline is now trustworthy enough to build 
 
 **What's blocking:**
 - Plan #6 not started: no per-token table with `token_id` + `fingerprint` + passage metadata exists; training currently runs on raw parallel text only, no lexicon-augmented features
-- Plan #7b (BDB binyan coverage): 1.1% coverage — likely 50%+ of Hebrew verbs missing binyan extraction; this corrupts the core morphological signal for Hebrew verb semantics
-- Plan #7c (HALOT multi-stem entries): `natan` / `shaphat` and other multi-stem lemmas missing from HALOT extraction
+- Plan #7b (BDB binyan residuals): 86.2% coverage on master — 3 small sub-defects remain (227 verb entries missing binyanim, הלך POS misclassification, עשה absent from fixture). These are bounded, not a structural absence. Builder dispatched on `fix/bdb-binyan-residuals`.
+- Plan #7c (HALOT multi-stem entries): `natan` / `shaphat` reportedly missing — this claim has NOT been re-audited against current master. Per the round 1 lesson (stale 1.1% → actual 86.2%), the #7c baseline must be re-measured before any Builder runs on it. Director round 3 will trigger the #7c re-audit after Verifier-2 on BDB sub-defects passes.
 - Plan #7a (BDAG GK/Greek Mounce): 0% — not a Hebrew blocker but blocks Greek track
 - No model has been trained at scale; no rubric metric result exists; chrF baseline unknown
 - Rust export path (Phase 5) not designed
 
 **What's next (Director's recommendation):**
-Fix Plan #7b (BDB binyan) before Plan #6 assembly. A corpus built on 1.1% binyan coverage poisons morphological signal at the source. The fix is bounded (single defect class, known location). Plan #6 should not run until BDB binyan and HALOT multi-stem are resolved.
+Builder on `fix/bdb-binyan-residuals` per round 2 director-note (investigation-first, then fix). After Verifier-2 passes: Director round 3 re-audits #7c HALOT baseline, then Plan #6. Plan #6 is closer than round 1 believed — BDB binyan was never the structural blocker it appeared to be.
 
 ---
 
 ## Open questions
 
-**For Director:**
-- HALOT binyanim is at 95.6% on verbs. Is the remaining 4.4% acceptable for Plan #6, or does it need another pass before assembly?
-- Plan #7b (BDB binyan 1.1%) vs Plan #7c (HALOT natan/shaphat): which defect has higher coverage impact per token? Need a count of affected tokens in the Genesis corpus before scheduling.
+**For Director (round 3, after Verifier-2):**
+- Are #7c HALOT multi-stem and Plan #7a BDAG GK ALSO at higher coverage than the stale pending-pile claimed? The 1.1%→86.2% lesson must be applied: re-audit both against current master before any Builder runs. Expect similar surprises.
+- HALOT binyanim is at 95.6% on verbs. Is the remaining 4.4% acceptable for Plan #6, or does it need another pass? Defer this question until #7b residuals close.
 
-**For user:**
+**For user (deferred — not blocking immediate work):**
 - Confirm Plan #6 corpus assembly schema: should `passage_id` be verse-level (e.g., `Gen.1.1`) or passage-level (pericopae blocks)? This determines how the passage_metadata table keys.
 - Confirm whether `genesis_full` (all 1,532 verses) or just Genesis 1–3 fixture is the intended training corpus for the first model run.
 - HALOT and BDB both have Hebrew-side coverage; KM is the Greek Mounce lexicon and also contains Hebrew cross-refs via `gk H{n}` pattern. Confirm: for Plan #6 Hebrew-track corpus, are KM's Hebrew cross-references in scope for token augmentation, or only HALOT/BDB?
+
+**Resolved (retired):**
+- `docs/domain-knowledge-cache.md` existence question: NOW EXISTS (PR #16). BDB-specific patterns section present. Builder briefs should reference it directly.
