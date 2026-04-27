@@ -146,7 +146,40 @@ BDB Complete has multiple consonantally-identical entries that should be collaps
 
 ### Binyan extraction
 
-Currently 93/8848 entries have binyanim populated — likely incomplete extraction. Filed as Plan #7b for follow-up investigation.
+Post-fix (branch `fix/bdb-binyan-residuals`): 1,683 / 1,695 verb entries have binyanim populated (99.3% coverage). 12 residuals are addendum/cross-ref stubs with no morphological data.
+
+#### Aramaic stem labels (BDB Aramaic section)
+
+BDB files its Aramaic vocabulary as `vb.` entries (not `vb. (Aram.)`) using Peal/Pael/Haphel stem labels:
+- `Pe. ` = Peal (Qal equivalent), ~98 entries
+- `Pa. ` = Pael (Piel equivalent), ~22 entries
+- `Haph. ` = Haphel (Hiphil equivalent), ~17 entries
+- `Ithpa. ` = Ithpaal, `Shaph. ` = Shaphel, `Aph. ` = Aphel, `Ithpe. ` = Ithpeel, `Po. ` = Polel (alternate abbrev.)
+- These are NOT the HALOT `\n\t\t{stem}:` lowercase pattern — BDB uses spaced capital form with period and space.
+
+#### Compound Strong's entries
+
+810 BDB entries use `N, M\t` compound Strong's format (e.g. `1980, 3212\t` for הָלַךְ). The entry parser `strongs_tab` strategy must handle this by parsing primary strongs N and skipping secondary M.
+
+#### Implicit Qal verbs
+
+~64 BDB verb entries have no explicit `Qal ` section header. Body jumps directly into paradigm forms. These are pure-Qal verbs. The extractor uses an implicit Qal fallback (whole body = Qal section) when no stem label is found.
+
+#### Roman numeral headword prefix
+
+BDB files homographs as `I. {headword}`, `II. {headword}`. With `halot_line` field split, the extracted `headword_field = "I."` which decodes to empty consonantal. The headword extractor must fall back to the first beta-code token from the body field when headword_field is a bare Roman numeral stub (`I.`, `II.`, `III.`, `IV.`).
+
+### Known source gaps
+
+None for BDB — all major missing entries traced to extractor bugs rather than binary absence.
+
+#### הָלַךְ (to walk, halak)
+
+Previously missing from fixture as verb entry. Root cause: compound strongs `1980, 3212` format dropped by `strongs_tab` parser. Fixed in `fix/bdb-binyan-residuals`. The two noun entries `הֵלֶךְ` (traveller, n.m.) and `הֲלָךְ` (toll, n.) are source-truth nominals.
+
+#### עָשָׂה (to do/make, asah)
+
+Previously missing from fixture. Root cause: headword `I. oDcDh` → `halot_line` extracts `I.` as headword token → empty consonantal. Fixed in `fix/bdb-binyan-residuals`.
 
 ---
 
