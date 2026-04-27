@@ -12,6 +12,7 @@ Usage:
     uv run python scripts/fetch_genesis_full.py
 """
 
+import html
 import json
 import re
 import sys
@@ -42,8 +43,26 @@ def fetch_hebrew_chapter(chapter: int, retries: int = 3) -> list[str]:
 
 
 def strip_hebrew_html(text: str) -> str:
-    """Remove HTML/footnote markup from Sefaria's Hebrew verses."""
+    """Clean Sefaria Hebrew verses to bare consonantal/vocalized text.
+
+    Sefaria delivers Hebrew with HTML tags, HTML entities (&nbsp;), bracketed
+    editorial annotations ({...}, [...], (...)), variant-reading asterisks,
+    and stray combining grapheme joiners (U+034F). Strip all of them so the
+    BPE tokenizer sees only Hebrew + standard space.
+    """
+    # 1. Strip HTML tags: <sup>1</sup>, <i>...</i>, etc.
     text = re.sub(r"<[^>]+>", "", text)
+    # 2. Decode HTML entities: &nbsp; -> NBSP (then collapsed below), &amp; -> &
+    text = html.unescape(text)
+    # 3. Strip Sefaria's bracketed editorial annotations
+    text = re.sub(r"\{[^}]*\}", "", text)  # {qere/ketiv}
+    text = re.sub(r"\[[^\]]*\]", "", text)  # [variant]
+    text = re.sub(r"\([^)]*\)", "", text)  # (note)
+    # 4. Strip variant-reading asterisks
+    text = text.replace("*", "")
+    # 5. Strip combining grapheme joiner (U+034F) — Sefaria sometimes inserts these
+    text = text.replace("͏", "")
+    # 6. Normalize all whitespace (incl. NBSP from step 2) to single ASCII space, trim
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
