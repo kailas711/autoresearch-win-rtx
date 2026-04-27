@@ -25,6 +25,23 @@ def test_score_translate_returns_scalar(tmp_path, monkeypatch):
     assert 0.0 <= s <= 1.0
 
 
+def test_expand_range_single_and_multi_verse():
+    import score_translate
+    assert score_translate._expand_range("Gen.1.1", "Gen.1.1") == ["Gen.1.1"]
+    assert score_translate._expand_range("Gen.1.3", "Gen.1.5") == ["Gen.1.3", "Gen.1.4", "Gen.1.5"]
+
+
+def test_load_gold_subset_expands_ranges():
+    """Multi-verse catalog entries (ref_start != ref_end) must produce all verse refs."""
+    import score_translate
+    gold = score_translate.load_gold_subset()
+    # The catalog has Gen.1.3 -> Gen.1.5 ('let there be light' block); confirm it's expanded.
+    multi = [refs for refs, _ in gold if len(refs) > 1]
+    assert multi, "expected at least one multi-verse entry in catalog"
+    light_block = next((refs for refs, _ in gold if refs and refs[0] == "Gen.1.3"), None)
+    assert light_block == ["Gen.1.3", "Gen.1.4", "Gen.1.5"]
+
+
 def test_train_translate_smoke(tmp_path, monkeypatch):
     monkeypatch.setenv("WALKING_SKELETON_CACHE", str(tmp_path / "cache"))
     import prepare_translate
