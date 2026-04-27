@@ -397,6 +397,11 @@ def parse_stepbible_tsv(
         gloss   = cols[_COL_GLOSS].strip()   if len(cols) > _COL_GLOSS   else ""
         meaning = cols[_COL_MEANING].strip() if len(cols) > _COL_MEANING else ""
 
+        # STEPBible sometimes duplicates the lemma after '=' as a cross-ref marker;
+        # strip it so we keep only the canonical form (always Greek Unicode, not beta code).
+        if "=" in lemma:
+            lemma = lemma.split("=")[0].strip()
+
         if not lemma and not gloss:
             continue
 
