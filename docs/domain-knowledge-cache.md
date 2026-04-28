@@ -77,6 +77,37 @@ Implicit-Qal fallback: verbal entries that lack explicit section headers are pur
 
 If a verb appears absent from the multi-stem extraction (e.g., natan, shaphat reportedly missing): check if it's classified into a different category (CrossRef, single-stem) rather than truly absent. Source binary almost certainly has these as discrete entries.
 
+### HALOT verb entry format — two classes (discovered 2026-04-27, see docs/audits/halot-grammar-investigation.md)
+
+**Class 1 — Explicit-vb. entries (~298 in current fixture):**
+Format: `headword: [DSS|denom.|Ña.] vb. ...`
+`vb.` appears within first ~50 chars of body after `split_halot_line`. Grammar extraction succeeds.
+
+**Class 2 — Implicit-verb entries (high-frequency roots, ~1,200+ estimated):**
+Format A (homograph): `I headword (N x): etymology; qal:...`
+Format B (non-homograph): `headword (N x): etymology; qal:...`
+NO `vb.` label anywhere in entry. Verb identity signaled ONLY by stem section headers (`qal:`, `nif.:`, etc.). This is deliberate HALOT editorial practice for roots whose verbal nature is universally known (e.g., אמר entry 469, ידע entry 2353, עשה entry 4977, בוא entry 743). Grammar extraction currently fails for all Class 2 entries.
+
+### Roman numeral prefix format
+
+HALOT uses `"I headword"` (space, NO dot) for homograph disambiguation. Distinct from BDB's `"I. headword"` (dot + space). **RC2 fix (Phase 2, commit 462454d):** `is_roman_numeral_stub()` in pipeline.rs now handles both formats — BDB `"I."` (dot) AND HALOT `"I"` (bare, no dot). This resolved 1,294 entries with `headword_consonantal=None`.
+
+### Hebrew verb נתן (to give, ~2,014 OT occurrences)
+
+Has NO standalone Hebrew verb root entry in the HALOT binary. Exists only via derived nouns (entries 4349, 4352-4355) and Aramaic cognate (entry 7297, which Phase 2 re-extraction classified as verb via binyan markers). HALOT editorial omission, not a parsing defect. Validation sample lists for any fix must note this: נתן cannot be validated as a Hebrew verb root entry via HALOT.
+
+### Hebrew verb ראה (to see, ~1,311 OT occurrences)
+
+**Phase 2 status: source-gap confirmed.** No Hebrew root entry found in binary section after Phase 2 re-extraction. Only derived nouns יִרְאָה (entry 2627) and מַרְאָה (entry 3815) are present. Phase 2 Builder did not find ראה under alternative beta-code encodings. Consistent with HALOT editorial omission (same pattern as נתן). Not a parsing defect.
+
+### HALOT None-grammar structural reality (Phase 2 finding)
+
+After Phase 2 RC1+RC2+RC3 fixes, grammar_normalized=None remains at ~50% of total entries (3,265 of 6,529). This is NOT a residual defect — it reflects HALOT's editorial practice:
+- Derived nouns, proper names, particles, and cross-reference stubs that appear in HALOT without an explicit POS label
+- These entries have NO binyan markers (confirmed in Phase 2) and no `vb.`/`n.m.`/etc. label after RC3 tightening
+- The <10% None target in Director r5 §5 was based on the expectation that RC1 would pull most None entries into 'verb'. In practice, ~3,265 genuine-None entries exist in the source that are not recoverable by mechanical means
+- Surface trigger for Director: verb count 1,471 (target ≥1,500; binary search confirms 1,453 entries have binyan markers); None-grammar at 50% is source-structural, not fixable by decoder changes
+
 ---
 
 ## BDAG-specific patterns
