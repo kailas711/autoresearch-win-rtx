@@ -1,7 +1,7 @@
 # Topic Summary — Hebrew translation
 
-**Last updated:** 2026-04-27 (round 7 — HALOT closed; Plan #6 architecture round)
-**Active rounds:** 7
+**Last updated:** 2026-04-27 (round 8 — Plan #6 Builder dispatch)
+**Active rounds:** 8
 
 ---
 
@@ -17,8 +17,12 @@ All three Hebrew-side lexicons are clean and ready for Plan #6 corpus assembly:
 
 **KM:** iter-4 baseline (10,173 entries; 100% `gk_number` coverage). Acceptable as-is for Plan #6 walking-skeleton assembly; binyan audit deferred until signal demands it.
 
-**Data inventory confirmed (r7 audit):**
-- `data/fixtures/lex_bdb.json` — 9,433 entries; full field schema including `binyanim`, `strongs`, `gk_number`, `senses`, `morphology`, `homograph_index`, and `_source` provenance keys on every annotated field.
+**Plan #6 spec v3 merged on master (`2566de3`).** The Architect produced a 1,326-line spec (`docs/superpowers/specs/2026-04-28-plan-6-corpus-architecture.md`) with all 3 design corrections + Q3=C clarification applied: Correction 1 (linguistic-match joins, cross_walk_references as non-identity), Correction 2 (translations in own table), Correction 3 (per-token interlinear glosses), Correction 4 / Q3=C (STEPBible restored as primary linguistic source). 14 runnable AC scripts in § G. Builder dispatch (r8 → Builder) is the next action.
+
+**v1 scope:** Genesis-only, ~30K tokens, per-pericope passages (~14 pericopes). Phase-split approach (Path B) adopted: 6 phases across multiple Builder dispatches to isolate defects per phase.
+
+**Data inventory confirmed (r7–r8 audit):**
+- `data/fixtures/lex_bdb.json` — 9,433 entries; full field schema including `binyanim`, `strongs`, `gk_number`, `senses`, `headword_consonantal`, `headword_vocalized`, `grammar_normalized`, `homograph_index`, and `_source` provenance keys on every annotated field.
 - `data/fixtures/lex_halot.json` — 6,631 entries; same field schema as BDB.
 - `data/fixtures/lex_km.json` — 10,173 entries; same field schema.
 - `data/fixtures/genesis_full_hebrew.json` — 1,532 verses keyed `Gen.1.1`; value = vocalized Hebrew string per verse (flat string, no per-token decomposition yet).
@@ -32,9 +36,9 @@ All three Hebrew-side lexicons are clean and ready for Plan #6 corpus assembly:
 
 ## What changed in the most recent round
 
-**Phase 3 closed via five PRs (r5–r6 work).** The HALOT grammar fix (RC1+RC2+RC3) recovered the verb pool from 298 to 1,471 (4.9×). PR #10 added a body-fallback refinement recovering 102 of 103 lost entries; 1 marginal entry remains excluded — acceptable, not a Phase 4 blocker. PR #19 shipped six independent fixes (circular import, verse-range bug, Strong's suffixes, training improvements). PR #20 regenerated the HALOT fixture to 6,631 entries / 1,481 verbs with 0 over-extraction. Verifier-4 independently confirmed all acceptance criteria. Director r6 issued CALIBRATION ACCEPTED + Phase 2 PASS on both calibrated bars (verb ≥1,450, None-grammar <55% structural floor).
+**Architect produced Plan #6 spec v3 (1,326 lines, 14 AC scripts, 9 alternatives, 13 out-of-scope items).** PR #21 merged at master commit `2566de3`. The spec covers: per-token table (§ A), per-passage table (§ B), translations table (§ B'), token_id format (§ C), fingerprint algorithm (§ D), passage grain decision (§ E: per-pericope chosen), sourcing pipeline (§ F: OSHB primary for surface/lemma/morphology; STEPBible primary for lemma_vocalized and cross_walk_references; Macula for phrase tree; linguistic-match joins for lexicon_links), and 14 runnable AC scripts (§ G). Three design corrections were applied post-user-review (linguistic-only fingerprint; translations in own table; per-token interlinear glosses). Q3=C clarification added Correction 4: STEPBible restored as primary linguistic source; Strong's/GK preserved as non-identity cross_walk_references. All 14 AC criteria cited at spec master commit `2566de3`.
 
-**Director r7 (this round) routes Plan #6 architecture.** The Architect brief (§ 5 of `docs/topic-director-notes/hebrew-2026-04-27-r7.md`) specifies a 10-section schema design deliverable covering per-token table, per-passage table, token_id format, fingerprint algorithm, passage grain decision, sourcing pipeline, runnable acceptance criteria, alternatives considered, migration path, and explicit out-of-scope list. Architect produces the spec; Builder implements in r8.
+**Director r8 routes Plan #6 implementation.** Phase-split decision adopted (Path B, 6 phases). Source data availability assessed: OSHB, STEPBible TSV, and Macula Hebrew require fetching (all public, all fetchable via GitHub clone); Berean, gold, and lex fixtures are immediately available; `.ainter`/`.agloss` are locally available but require parser implementation (v1 best-effort: STEPBible interlinear alone satisfies AC-10 at ≥80% if Accordance parsers not built). No BLOCKER — all critical sources are publicly accessible. Phase 1 Builder dispatch proceeds on branch `feat/plan-6-phase-1-ingest`.
 
 ---
 
@@ -42,33 +46,31 @@ All three Hebrew-side lexicons are clean and ready for Plan #6 corpus assembly:
 
 **Data-quality gates:** All three Hebrew lexicons clean on master. No blockers to Plan #6.
 
-**Plan #6 is the architectural foundation for actual translation model training.** After Plan #6:
+**After Plan #6 v1 (Genesis corpus, ~30K tokens, per-pericope):** Training pipeline can be revised to consume the structured corpus (`prepare_translate.py` extended or replaced). A baseline model can be trained on v1 corpus; chrF metric established on full Genesis; rubric patterns P1–P15 evaluated against model output.
 
-- **r8** — Builder implements corpus assembler: multi-source ingest (OSHB/Sefaria, Macula Hebrew, STEPBible TSV, lexicon fixtures), per-token record generation with `token_id` + BLAKE2b-128 fingerprint, per-passage metadata table, lexicon FK joins. Output: `data/corpus/hebrew/v1.jsonl` + `data/corpus/hebrew/passages.jsonl`.
-- **r9** — Verifier audits corpus quality (coverage, fingerprint uniqueness, lexicon-join rates, gold-catalog token presence, passage FK integrity).
-- **r10+** — Training loop refactor to consume Plan #6 corpus as primary input; chrF baseline established; rubric metric run.
-- **Greek track** — gated until first Hebrew model trained. Not in scope for r7–r10.
+**Subsequent rounds:**
+- Full OT extension (Plan #6 v2): ingest all 39 Hebrew Bible books; sense disambiguation curation pass; `.ainter`/`.agloss` parsers if not completed in v1.
+- Plan #6 v2 corpus: Macula discourse boundaries beyond Genesis; author_tradition / era_estimate populated from scholarly sources; literary_devices annotation.
+- Training pipeline integration — consume Plan #6 corpus in `prepare_translate.py`; evaluate chrF against gold catalog.
+- Greek track scaffolding — gated until first Hebrew model trained on structured corpus. Not in scope until Hebrew baseline is established.
 
 **What's still blocking ML signal:**
-- Plan #6 corpus not started (per-token table, passage metadata, fingerprint pipeline).
-- No model trained at scale; no rubric metric result; chrF baseline unknown on full Genesis.
-- Rust export path (Phase 5) not designed.
+- Plan #6 corpus not yet built (per-token table, passage metadata, fingerprint pipeline, lexicon joins).
+- No model trained at scale on structured corpus; chrF baseline unknown on full Genesis.
+- Rust export path not designed.
 
 ---
 
 ## Open questions
 
-**Architecture decisions Plan #6 must resolve (Architect brief, r7):**
+**Source data availability (r8 assessment):**
+- OSHB (`github.com/openscriptures/morphhb`) — fetch required; public MIT; not blocking but Builder must fetch before Phase 1.
+- STEPBible TSV (`github.com/STEPBible/STEPBible-Data`) — fetch required; public CC BY; not blocking.
+- Macula Hebrew (`github.com/Clear-Bible/macula-hebrew`) — fetch required; public CC BY; not blocking but Phase 3 (pericope segmentation) depends on it; fallback to STEPBible paragraph markers available.
+- Accordance `.ainter`/`.agloss` — locally available per spec § F; parser implementation is new code (not blocking Phase 1–4; Phase 5 best-effort; STEPBible interlinear alone can satisfy AC-10).
+- Anchor Bible Dictionary — licensing uncertain; v1 mechanical defaults for `author_tradition`/`era_estimate`; not a blocker.
 
-1. **Passage grain:** per-verse (e.g., `Gen.1.1`) vs per-pericope (oratorical/narrative unit per Macula Hebrew discourse boundaries) vs per-chapter? Director preference: per-pericope as primary unit with per-verse FKs for tokens. Architect must choose and justify against all three options.
-
-2. **Multiple-witness representation:** passages with divergent MT / LXX / DSS readings — flag at passage level only, or carry alternate token rows?
-
-3. **Disputed authorship:** JEDP source-criticism positions (Mosaic | J | E | D | P) are contested. Schema must encode competing positions as optional fields without enforcing one.
-
-4. **Cross-canon link grain:** per-verse links (e.g., `Gen.1.1 → John.1.1`) or per-pericope? Both are defensible; Architect decides.
-
-5. **Greek track schema parity:** confirm the same per-token / per-passage schema accommodates NT Greek when that track lights up (different identifier fields: `bdag_key`, `thayer_key`, `lsj_key` instead of `halot_key`/`bdb_key`).
+**Phase-split decision (r8):** Path B adopted (6-phase split). Each phase has own Builder dispatch + Verifier audit. Phase 1 = OSHB + STEPBible ingest; Phase 2 = token_id + fingerprint; Phase 3 = Macula + pericope segmentation; Phase 4 = lexicon joins; Phase 5 = interlinear glosses; Phase 6 = translations table. Full AC-1–14 re-run at end.
 
 **Follow-on flags (unblocked, not urgent):**
 - Flag 1 — `vol.` headword artifact (36 HALOT entries): filed for `fix/halot-vol-headword` branch; not a Plan #6 blocker.
@@ -78,3 +80,4 @@ All three Hebrew-side lexicons are clean and ready for Plan #6 corpus assembly:
 - BDB binyan structural blocker: RESOLVED. 99.3%; PR #18 merged.
 - HALOT Phase 2+3 acceptance: RESOLVED. PASS (calibrated). 1,481 verbs; 0 over-extraction.
 - Flag 3 (-103 delta explanation): RESOLVED. PRs #9/#20 merged; delta explained and accepted.
+- Plan #6 architecture decisions (5 open in r7): RESOLVED by Architect spec v3 (§ C token_id, § D fingerprint, § E per-pericope, § F sourcing, § H alternatives).
