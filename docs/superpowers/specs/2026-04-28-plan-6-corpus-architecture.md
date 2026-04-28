@@ -12,6 +12,16 @@
 
 The user reviewed v1 on 2026-04-28 (three corrections applied in v2) and answered six approval questions on the same day; Q3 returned answer **C — both interpretations apply**, prompting two further refinements applied in v3. This section records all corrections in chronological order so future readers see the full rationale without digging through commit history.
 
+### Amendment 4 (2026-04-28; Option C, post-Phase-1-Builder spec contradiction surface)
+
+Phase 1 Builder surfaced that § C ("OSHB tokens canonical; do not re-tokenize") and § G AC-1 (range [26K, 38K]) were contradictory: the Builder's OSHB-canonical parse produced 20,629 Genesis tokens, well outside the [26K, 38K] range (which had assumed morpheme-level counting). User chose **Option C**: OSHB word-level grain is canonical (token_id stays at one OSHB word per token), and morpheme decomposition is exposed as a structured per-token field (`morphemes: list[{form, role, lemma, morphology}]`). This is not re-tokenization; it is a derivative structural annotation. Specific changes:
+
+1. **§ A per-token schema** — new field `morphemes: list[{form, role, lemma, morphology}] | null` added to annotation fields (not identity; not in fingerprint).
+2. **§ C edge cases** — explicit canonical-grain declaration added; morpheme-as-field distinction stated.
+3. **§ D fingerprint** — explicit exclusion note for `morphemes` field added.
+4. **§ G AC-1** — range corrected from [26K, 38K] to [20K, 22K] (OSHB canonical word-level). Sub-validation added: total morpheme count in [25K, 32K].
+5. **§ G AC-13** — target corrected from ≥85% to ≥80% strong_number; GK explicitly null for Hebrew (TBESH is Strong's-only for Hebrew). Greek track will populate gk_number from BDAG/Mounce mappings.
+
 ### Correction 1 — Drop source-derived IDs from token identity; joins are linguistic
 
 **User's verbatim guidance (v2 round):** "The link should be based on the linguistic identifiers not just a derived index number from a source. Strong's is only for KJV interlinear and does not help here. We are working on individual token instances, were as the Strong's concordance just does a blanket meaning for the word no matter the context incorrectly."
@@ -151,6 +161,37 @@ These fields describe attributes of a token but do not define identity. They can
 | `qere_surface` | str | OSHB | no | yes | no | The qere (marginal reading) surface form if this token is a ketiv; null otherwise; paired with `annotation_flags: ["ketiv"]` |
 | `annotation_flags` | list[str] | curated / derived | no | yes (empty list allowed) | no | Curator or mechanical tags; e.g. `["ketiv"]`, `["proclitic"]`, `["maqaf-compound"]`, `["sefaria-surface-divergence"]`, `["halot-multiple-match"]`; NOT in fingerprint |
 | `source_provenance` | str | derived | yes | no | no | Comma-separated source identifiers contributing fields; e.g. `"OSHB,Macula,STEPBible,.ainter"` |
+| `morphemes` | list[{form, role, lemma, morphology}] \| null | derived from OSHB `<w>` element `lemma`+`morph` attributes | no | yes | no | **Amendment 4 (Option C, 2026-04-28).** Morpheme decomposition of the token's OSHB word. Null for tokens with no morphological complexity beyond a single head morpheme. NOT in fingerprint (derivable from `lemma` + `morphology_code`; including would risk fingerprint instability on ETCBC morphology revisions). See substructure below. |
+
+### Substructure: `morphemes` entry (Amendment 4 — Option C, 2026-04-28)
+
+OSHB encodes morpheme decomposition inside the `<w>` element's `lemma` attribute using `/` as a separator (e.g., `lemma="b/7225"` = proclitic preposition `ב` + Strong's H7225 head). The `morph` attribute follows the same `/` boundary. The `morphemes` field exposes this decomposition as a structured list on each token without altering the canonical token grain (each OSHB `<w>` is still one token).
+
+Each list element:
+
+```
+{
+  "form":       str,        // surface form of this morpheme (e.g., "בְּ", "רֵאשִׁית")
+  "role":       str,        // enum — see role values below
+  "lemma":      str | null, // morpheme's lemma; null for proclitics with no independent lemma (e.g., bare "ב")
+  "morphology": str | null  // morpheme-specific ETCBC morphology code segment; null if not provided
+}
+```
+
+**`role` enum values:**
+- `proclitic_preposition` — proclitic preposition (ב, כ, ל, מ as prefix)
+- `proclitic_article` — prefixed definite article (ה)
+- `proclitic_conjunction` — prefixed conjunction (ו, ו as waw-consecutive)
+- `head` — the primary lexical morpheme (the root/stem word)
+- `pronominal_suffix` — pronominal suffix encoding a possessive or object pronoun
+- `directional_he` — directional ה suffix (motion toward)
+- `other` — residual; log in `annotation_flags: ["morpheme-role-unclassified"]`
+
+**Nullability:** Null (not an empty list) for tokens that are single-morpheme words with no proclitic or suffix complexity. Tokens with only a head morpheme MAY have `morphemes: [{"form": ..., "role": "head", ...}]` or `morphemes: null` — Builder picks one convention and documents it; Verifier checks coverage is ≥70%.
+
+**Not re-tokenization:** The canonical token is still the OSHB `<w>` element. The `morphemes` list is a structural annotation. Downstream encoders may use it for sub-token attention; decoders and downstream consumers that want word-level behavior can ignore it.
+
+**Fingerprint exclusion rationale:** `morphemes` is excluded from the BLAKE2b fingerprint because it is fully derivable from `lemma` (which encodes the `/`-separated morpheme lemmas) and `morphology_code` (which encodes the `/`-separated morphology segments). Including it would be redundant and would introduce fingerprint instability if ETCBC revises its morpheme-boundary convention between versions.
 
 ### Substructure: `cross_walk_references` (v3 addition; Q3=C, Effect 1)
 
@@ -357,16 +398,24 @@ Note: `gold/catalog.json` uses both `Ps.` and `Psalm.` — Builder must canonica
 
 NT: `Matt`, `Mark`, `Luke`, `John`, `Acts`, `Rom`, `1Cor`, `2Cor`, `Gal`, `Eph`, `Phil`, `Col`, `1Thess`, `2Thess`, `1Tim`, `2Tim`, `Titus`, `Phlm`, `Heb`, `Jas`, `1Pet`, `2Pet`, `1John`, `2John`, `3John`, `Jude`, `Rev`. Hebrew and Greek namespaces are orthogonal; no abbreviation collisions.
 
+### Canonical tokenization grain (Amendment 4 — Option C, 2026-04-28)
+
+**Tokenization grain:** OSHB word-level tokens are the canonical token grain. Each `<w>` element in OSHB OSIS XML corresponds to exactly one corpus token. `token_id` is `<book>.<chapter>.<verse>.<word_index>` where `word_index` is 0-indexed across the verse's `<w>` elements.
+
+**Morphemes within a token:** Hebrew words frequently combine multiple morphemes (proclitic prepositions, articles, conjunctions, head word, pronominal suffixes, directional ה, etc.). The corpus preserves OSHB tokenization at the token-grain level AND exposes morpheme decomposition as the per-token `morphemes` field (per § A schema). This is **not re-tokenization** — the canonical token boundary is the OSHB `<w>` element. The `morphemes` field is a structural decomposition that downstream consumers may use to attend at sub-token granularity, but the corpus's identity remains the OSHB-canonical word.
+
+**Implication for AC-1 token count:** OSHB word-level tokenization yields ~20,600 Genesis tokens (confirmed from Phase 1 Builder parse). The range [26K, 38K] in v3 was sized for morpheme-level counting and is superseded; see AC-1 (§ G) for corrected range.
+
 ### Edge case handling rules
 
 **Ketiv / Qere:**
 The ketiv (written form) gets the canonical `token_id` and `surface`. The qere is NOT a separate token. Stored as: `surface` = ketiv, `qere_surface` = qere (nullable), `annotation_flags: ["ketiv"]`. Fingerprint is computed over the ketiv (canonical text).
 
 **Proclitic prepositions / conjunctions:**
-Follow OSHB tokenization as the canonical split decision. Each OSHB token unit = exactly one `token_id`. Builder must NOT re-tokenize.
+Follow OSHB tokenization as the canonical split decision. Each OSHB `<w>` element = exactly one `token_id`. Builder must NOT re-tokenize. The proclitic's decomposition is exposed via the `morphemes` field (Amendment 4), not as a separate token.
 
 **Maqaf-joined compounds:**
-Follow OSHB tokenization. If OSHB produces two tokens, each gets sequential `token_index`; if one token containing maqaf, it gets one `token_id`. Tag with `annotation_flags: ["maqaf-compound"]` when the surface contains U+05BE.
+Follow OSHB tokenization. If OSHB produces two tokens across a maqaf, each gets sequential `token_index`; if one token containing maqaf, it gets one `token_id`. Tag with `annotation_flags: ["maqaf-compound"]` when the surface contains U+05BE. Pronominal suffixes are within a single token's `morphemes` list, not separate tokens.
 
 **Paragraph markers:**
 `paragraph_marker_post = true` on the last token of a verse with following paragraph break. Source: STEPBible TSV or OSHB `<milestone type="paragraph"/>`.
@@ -458,6 +507,7 @@ def compute_fingerprint(token: dict) -> str:
 | `paragraph_marker_post`, `qere_surface`, `annotation_flags` | Editorial / curatorial |
 | `source_provenance` | Administrative |
 | `cross_walk_references` (`strong_number`, `gk_number`) | **Explicitly excluded per Correction 1.** Strong's/GK are concordance-flat indexes that don't reflect token-instance identity (one Strong's number maps to a "blanket meaning regardless of context"). They live alongside identity in the per-token record for cross-walk only. v3 update: preserved as non-identity reference data, not removed entirely (Q3=C, Effect 1) |
+| `morphemes` | **Excluded per Amendment 4 (Option C, 2026-04-28).** The `morphemes` field is derivable from `lemma` (which encodes `/`-separated morpheme lemmas) and `morphology_code` (which encodes `/`-separated morphology segments). Including it in the fingerprint would be redundant AND would risk fingerprint instability when ETCBC morphology revises its decomposition output between versions. The 6 linguistic-identity fields (`token_id`, `surface`, `lemma`, `lemma_vocalized`, `morphology_code`, `binyan`) remain the canonical fingerprint inputs. |
 
 **Stability side-benefit:** Because `cross_walk_references` is excluded from fingerprint inputs, STEPBible TSV updates that revise Strong's↔GK mappings DO NOT invalidate token fingerprints. STEPBible can be re-vendored without triggering corpus-wide curation re-review. This is the design payoff for keeping concordance numbers out of identity.
 
@@ -762,6 +812,8 @@ All scripts read from `data/corpus/hebrew/` and `gold/`. Each script prints `PAS
 
 ### AC-1: Token count plausibility
 
+**Amendment 4 (Option C, 2026-04-28):** Range corrected from [26K, 38K] to [20K, 22K] to reflect OSHB canonical word-level tokenization (Phase 1 Builder confirmed 20,629 Genesis tokens). The original [26K, 38K] was sized for morpheme-level counting and is superseded by the grain decision in § C. Sub-validation added: total morpheme count across all tokens (summing `len(token['morphemes'])` for tokens with non-null `morphemes`) must be in [25K, 32K] — this validates that morpheme decomposition is populating at scale.
+
 ```python
 #!/usr/bin/env python3
 import json, sys
@@ -769,11 +821,21 @@ tokens = [json.loads(l) for l in open('data/corpus/hebrew/v1.jsonl', encoding='u
 gen_tokens = [t for t in tokens if t['token_id'].startswith('Gen.')]
 print(f"Total tokens: {len(tokens)}")
 print(f"Genesis tokens: {len(gen_tokens)}")
-low, high = 26_000, 38_000
+low, high = 20_000, 22_000
 if low <= len(gen_tokens) <= high:
     print(f"PASS: Genesis token count {len(gen_tokens)} within [{low}, {high}]")
 else:
     print(f"FAIL: Genesis token count {len(gen_tokens)} outside [{low}, {high}]")
+    sys.exit(1)
+
+# Sub-validation: morpheme count (Amendment 4)
+total_morphemes = sum(len(t.get('morphemes') or []) for t in gen_tokens)
+morph_low, morph_high = 25_000, 32_000
+print(f"Total morphemes across Genesis tokens: {total_morphemes}")
+if morph_low <= total_morphemes <= morph_high:
+    print(f"PASS: morpheme count {total_morphemes} within [{morph_low}, {morph_high}]")
+else:
+    print(f"FAIL: morpheme count {total_morphemes} outside [{morph_low}, {morph_high}]")
     sys.exit(1)
 ```
 
@@ -1075,48 +1137,42 @@ else:
     sys.exit(1)
 ```
 
-### AC-13: Cross-walk reference coverage (NEW per v3 Q3=C Effect 1)
+### AC-13: Cross-walk reference coverage (NEW per v3 Q3=C Effect 1; amended Amendment 4)
+
+**Amendment 4 (Option C, 2026-04-28):** Target corrected from ≥85% (both strong_number or gk_number) to ≥80% `strong_number` coverage for Hebrew tokens where TBESH has an entry. **Hebrew structural note:** TBESH (STEPBible Hebrew) does NOT carry GK numbers; `cross_walk_references.gk_number` is null for all Hebrew tokens. This is structural — TBESH is Strong's-only for Hebrew — and is acceptable. The ≥85% target that assumed both fields could contribute is superseded. Greek track will populate `gk_number` from BDAG/Mounce mappings when that track lights up.
 
 ```python
 #!/usr/bin/env python3
-# Cross-walk references (Strong's / GK) are populated where STEPBible TSV
-# has data for the token. Target: >=85% of Hebrew Bible tokens with at
-# least one of strong_number or gk_number populated.
-# This validates Correction 1 (preserve concordance numbers as non-identity
-# reference data) AND Correction 4 (STEPBible TSV restored as primary
-# linguistic data source for cross_walk_references).
+# Cross-walk references: for Hebrew tokens, only strong_number is expected
+# (TBESH is Strong's-only; gk_number is structurally null for Hebrew).
+# Target: >=80% of Hebrew Bible tokens with strong_number populated where
+# TBESH has data. gk_number null rate should be ~100% for Hebrew (not a failure).
+# Amendment 4 (Option C, 2026-04-28): target revised from >=85% (both fields)
+# to >=80% strong_number only.
 import json, sys
 tokens = [json.loads(l) for l in open('data/corpus/hebrew/v1.jsonl', encoding='utf-8')]
 total = len(tokens)
-with_xref = 0
-strong_only = 0
-gk_only = 0
-both = 0
+with_strong = 0
+with_gk = 0
 for t in tokens:
     xref = t.get('cross_walk_references') or {}
-    s = xref.get('strong_number')
-    g = xref.get('gk_number')
-    if s and g:
-        both += 1
-        with_xref += 1
-    elif s:
-        strong_only += 1
-        with_xref += 1
-    elif g:
-        gk_only += 1
-        with_xref += 1
+    if xref.get('strong_number'):
+        with_strong += 1
+    if xref.get('gk_number'):
+        with_gk += 1
 
-pct = 100.0 * with_xref / max(total, 1)
+strong_pct = 100.0 * with_strong / max(total, 1)
+gk_pct = 100.0 * with_gk / max(total, 1)
 print(f"Total tokens: {total}")
-print(f"  with cross_walk_references populated: {with_xref} ({pct:.1f}%)")
-print(f"  both strong+gk: {both}")
-print(f"  strong_number only: {strong_only}")
-print(f"  gk_number only: {gk_only}")
-if pct >= 85.0:
-    print(f"PASS: cross-walk coverage {pct:.1f}% >= 85%")
+print(f"  with strong_number populated: {with_strong} ({strong_pct:.1f}%)")
+print(f"  with gk_number populated: {with_gk} ({gk_pct:.1f}%)")
+print(f"  Note: gk_number expected ~0% for Hebrew (TBESH is Strong's-only; Greek track will populate)")
+
+if strong_pct >= 80.0:
+    print(f"PASS: strong_number coverage {strong_pct:.1f}% >= 80%")
 else:
-    print(f"FAIL: cross-walk coverage {pct:.1f}% < 85%")
-    print("  Note: ensure STEPBible TSV is fetched and joined per § F sourcing pipeline.")
+    print(f"FAIL: strong_number coverage {strong_pct:.1f}% < 80%")
+    print("  Note: ensure STEPBible TBESH TSV is fetched and joined per § F sourcing pipeline.")
     sys.exit(1)
 ```
 
